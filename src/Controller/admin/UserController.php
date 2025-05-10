@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -81,7 +82,7 @@ final class UserController extends AbstractController
             $records = $datatable->getScriptTable($sql, $columns, $this->em, "GROUP BY u.id");
             foreach ($records['results'] as $i => $result) {
 
-                $avatarDir = $this->generateUrl('admin_index') . 'uploads/avatars/' . $result["picture_name"];
+                $avatarDir = $this->generateUrl('front_index') . 'uploads/avatars/' . $result["picture_name"];
                 if ($result["picture_name"] !== null) {
                     $avatar = "<div class='rounded-circle p-3 bg-body-secondary cover' style='width: 32px; height: 32px; background-image: url(" . $avatarDir . ");'></div>";
                 } else {
@@ -125,18 +126,27 @@ final class UserController extends AbstractController
             $this->em->persist($user);
             $this->em->flush();
 
+            $token = $tokenStorage->getToken();
+
             if ($user === $this->getUser()) {
                 $user->setPicture(null);
-                $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-                $tokenStorage->setToken($token);
+
+                if ($token instanceof SwitchUserToken) {
+                    $originalToken = $token->getOriginalToken();
+                    $newToken = new SwitchUserToken($user, 'main', $user->getRoles(), $originalToken);
+                } else {
+                    $newToken = new UsernamePasswordToken($user, 'main', $user->getRoles());
+                }
+
+                $tokenStorage->setToken($newToken);
 
                 $message = 'Profil enregistré avec succès !';
-                // return $this->redirectToRoute('admin_user_index', [], Response::HTTP_SEE_OTHER);
                 $this->addFlash('success', $message);
+
                 return $this->json([
                     'success' => true,
                     'message' => $message,
-                    'redirect' => $this->generateUrl('admin_user_index', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                    'redirect' => $this->generateUrl('admin_user_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
                 ]);
             }
 

@@ -49,6 +49,15 @@
 						href: path('admin_user_index')}) 
 					}}
 				{% endif %}
+				{% if is_granted("ROLE_ADMIN") %}
+					{{ include("admin/components/sidebar-item.html.twig", {
+						menu: menu is defined ? menu : null, 
+						icon: "groups", 
+						slug: "user",
+						name: "test2", 
+						href: path('admin_user_index')}) 
+					}}
+				{% endif %}
 
 				{% if is_granted("ROLE_ALLOWED_TO_SWITCH") or is_granted('IS_IMPERSONATOR') %}
 					{% if not is_granted('IS_IMPERSONATOR') %}

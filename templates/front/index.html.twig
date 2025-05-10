@@ -1,0 +1,11 @@
+{% extends 'empty_base.html.twig' %}
+
+{% set page_name = "Site en construction" %}
+{% block title %}{{page_name}}{% endblock %}
+
+{% block body %}
+<div class="bg-body min-vh-100 flex-center flex-column">
+    <img src="{{asset('assets/img/logo.svg')}}" alt="{{PROJECT_NAME}}" width="150">
+    <h1 class="fs-3 mt-4">Site en cours de construction...</h1>
+</div>
+{% endblock %}

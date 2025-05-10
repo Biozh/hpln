@@ -18,12 +18,4 @@ class DashboardController extends AbstractController
             'controller_name' => 'DefaultController',
         ]);
     }
- 
-    #[Route('/hpln', name: 'hpln')]
-    public function hpln(): Response
-    {
-        return $this->render('hpln.html.twig', [
-            'controller_name' => 'DefaultController',
-        ]);
-    }
 }

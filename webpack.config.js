@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const Encore = require('@symfony/webpack-encore');
-const path = Encore.isProduction() ? '/build/' : '/symbiose/biozh/public/build/';
+const path = Encore.isProduction() ? '/build/' : '/biozh/socle/public/build/';
 
 const dotenv = require('dotenv');
 dotenv.config();

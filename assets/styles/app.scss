@@ -24,6 +24,10 @@ $custom-colors: (
     "secondary": $secondary,
     "dark": $dark,
     "light": $light,
+    "success": #69BD70,
+    "danger": #202222,
+    "warning": #EFB447,
+    "info": #5AC0E5
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);

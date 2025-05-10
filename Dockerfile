@@ -15,8 +15,9 @@ COPY . /var/www/html/
 # On garge les uploads
 RUN rm -rf /var/www/html/public/uploads/*
 
-
 # CONFIGURATION APACHE
+COPY php.ini /usr/local/etc/php/conf.d/99-custom-prod.ini
+
 ARG PREPROD=false
 COPY .htpasswd /tmp/.htpasswd
 COPY apache-prod.conf /tmp/apache-prod.conf

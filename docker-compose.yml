@@ -4,8 +4,8 @@ services:
       context: .
     container_name: ${APP_NAME}-apache
     environment:
-      APP_ENV: prod
-      APP_DEBUG: 0
+      APP_ENV: dev
+      APP_DEBUG: 1
       DATABASE_URL: "mysql://${APP_NAME}:${DATABASE_PASSWORD}@mysql:3306/${APP_NAME}_prod?serverVersion=10.6"
     networks:
       - web
@@ -17,12 +17,7 @@ services:
       - "traefik.http.routers.${APP_NAME}.tls.certresolver=myresolver"
       - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=80"
     volumes:
-      - socle-uploads:/var/www/html/public/uploads
-      - ./php-prod.ini:/usr/local/etc/php/conf.d/99-custom-prod.ini
-
-volumes:
-  socle-uploads:
-
+      - ./public/uploads:/var/www/html/public/uploads
 
 networks:
   web:

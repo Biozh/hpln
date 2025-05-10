@@ -25,3 +25,6 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 /public/uploads/
+
+.env
+.htpasswd

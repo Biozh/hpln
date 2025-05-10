@@ -4,8 +4,8 @@ services:
       context: .
     container_name: ${APP_NAME}-apache
     environment:
-      APP_ENV: dev
-      APP_DEBUG: 1
+      APP_ENV: prod
+      APP_DEBUG: 0
       DATABASE_URL: "mysql://${APP_NAME}:${DATABASE_PASSWORD}@mysql:3306/${APP_NAME}_prod?serverVersion=10.6"
     networks:
       - web

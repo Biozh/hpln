@@ -23,18 +23,16 @@ COPY apache-prod.conf /tmp/apache-prod.conf
 COPY apache-preprod.conf /tmp/apache-preprod.conf
 
 RUN if [ "$PREPROD" = "true" ]; then \
-        echo "PREPROD = true, copying preprod config" && \
         cp /tmp/apache-preprod.conf /etc/apache2/sites-available/000-default.conf && \
         mv /tmp/.htpasswd /etc/apache2/.htpasswd ; \
     else \
-        echo "PREPROD = false, copying prod config" && \
         cp /tmp/apache-prod.conf /etc/apache2/sites-available/000-default.conf ; \
     fi
 
 
 # Installe Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts
+RUN composer install --prefer-dist --no-interaction --no-scripts
 
 # Build des assets (si tu utilises Webpack Encore)
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \

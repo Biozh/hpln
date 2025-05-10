@@ -1,128 +1,28 @@
 services:
-  php-apache:
+  apache:
     build:
       context: .
-    environment:
-      APP_ENV: prod
-      APP_DEBUG: 1
-      DATABASE_URL: "mysql://hpln_user:password@db:3306/hpln_db?serverVersion=10.6"
-    networks:
-      - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.hpln.rule=Host(`hpln.fr`)"
-      - "traefik.http.routers.hpln.entrypoints=websecure"
-      - "traefik.http.routers.hpln.tls=true"
-      - "traefik.http.routers.hpln.tls.certresolver=myresolver"
-      - "traefik.http.services.hpln.loadbalancer.server.port=80"
-    volumes:
-      - uploads_data:/var/www/html/public/uploads
-
-  php-apache-preprod:
-    build:
-      context: .
-      args:
-        PREPROD: "true"
+    container_name: ${APP_NAME}-apache
     environment:
       APP_ENV: dev
       APP_DEBUG: 1
-      DATABASE_URL: "mysql://hpln_preprod_user:preprod_password@db-preprod:3306/hpln_preprod_db?serverVersion=10.6"
-
+      DATABASE_URL: "mysql://${APP_NAME}:${DATABASE_PASSWORD}@mysql:3306/${APP_NAME}_prod?serverVersion=10.6"
     networks:
       - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${APP_NAME}.rule=Host(`${APP_DOMAIN}`)"
+      - "traefik.http.routers.${APP_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${APP_NAME}.tls=true"
+      - "traefik.http.routers.${APP_NAME}.tls.certresolver=myresolver"
+      - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=80"
     volumes:
-      - uploads_data_preprod:/var/www/html/public/uploads
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.preprod.rule=Host(`preprod.hpln.fr`)"
-      - "traefik.http.routers.preprod.entrypoints=websecure"
-      - "traefik.http.routers.preprod.tls=true"
-      - "traefik.http.routers.preprod.tls.certresolver=myresolver"
-      - "traefik.http.services.preprod.loadbalancer.server.port=80"
+      - hpln-uploads:/var/www/html/public/uploads
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: hpln-phpmyadmin
-    restart: unless-stopped
-    environment:
-      PMA_HOST: db
-      PMA_USER: hpln_user
-      PMA_PASSWORD: password
-    networks:
-      - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.hpln.fr`)"
-      - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
-      - "traefik.http.routers.phpmyadmin.tls=true"
-      - "traefik.http.routers.phpmyadmin.tls.certresolver=myresolver"
-      - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+volumes:
+  hpln-uploads:
 
-  phpmyadmin-preprod:
-    image: phpmyadmin/phpmyadmin
-    container_name: hpln-phpmyadmin-preprod
-    restart: unless-stopped
-    environment:
-      PMA_HOST: db-preprod
-      PMA_USER: hpln_preprod_user
-      PMA_PASSWORD: preprod_password
-    networks:
-      - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.phpmyadmin-preprod.rule=Host(`preprod.phpmyadmin.hpln.fr`)"
-      - "traefik.http.routers.phpmyadmin-preprod.entrypoints=websecure"
-      - "traefik.http.routers.phpmyadmin-preprod.tls=true"
-      - "traefik.http.routers.phpmyadmin-preprod.tls.certresolver=myresolver"
-      - "traefik.http.services.phpmyadmin-preprod.loadbalancer.server.port=80"
-
-  db:
-    image: mariadb:10.6
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: hpln_db
-      MYSQL_USER: hpln_user
-      MYSQL_PASSWORD: password
-    volumes:
-      - dbdata:/var/lib/mysql
-    networks:
-      - web
-
-  db-preprod:
-    image: mariadb:10.6
-    container_name: hpln-db-preprod
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: hpln_preprod_db
-      MYSQL_USER: hpln_preprod_user
-      MYSQL_PASSWORD: preprod_password
-    volumes:
-      - dbdata_preprod:/var/lib/mysql
-    networks:
-      - web
-
-  redirect-admin:
-    image: traefik/whoami
-    container_name: redirect-admin
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.redirect-admin.rule=Host(`admin.hpln.fr`)"
-      - "traefik.http.routers.redirect-admin.entrypoints=websecure"
-      - "traefik.http.routers.redirect-admin.tls=true"
-      - "traefik.http.routers.redirect-admin.tls.certresolver=myresolver"
-      - "traefik.http.routers.redirect-admin.middlewares=redirect-to-admin-path"
-      - "traefik.http.middlewares.redirect-to-admin-path.redirectregex.regex=^https?://admin\\.hpln\\.fr/?(.*)"
-      - "traefik.http.middlewares.redirect-to-admin-path.redirectregex.replacement=https://hpln.fr/admin"
-      - "traefik.http.middlewares.redirect-to-admin-path.redirectregex.permanent=true"
-    networks:
-      - web
 
 networks:
   web:
     external: true
-
-volumes:
-  dbdata:
-  dbdata_preprod:
-  uploads_data:
-  uploads_data_preprod:

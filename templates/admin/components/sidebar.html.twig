@@ -39,16 +39,39 @@
 					</div>
 				</li>
 
-				{% if is_granted("ROLE_ADMIN") %}
 
+				{% if is_granted("ROLE_ADMIN") %}
+					{{ include("admin/components/sidebar-dropdown.html.twig", {
+						menu: menu is defined ? menu : null,
+						item: {
+							icon: "settings",
+							slug: "cms",
+							name: "Gestion du site",
+						},
+						items: [
+							{
+								slug: "cms_projects",
+								name: "Nos projets", 
+								href: path('admin_cms_projects_index') 
+							},{
+								slug: "cms_about",
+								name: "L'association", 
+								href: path('admin_cms_about_index') 
+							},{
+								slug: "cms_contact",
+								name: "Nous contacter", 
+								href: path('admin_cms_contact_index') 
+							}
+						]}) 
+					}}
+							
 					{{ include("admin/components/sidebar-item.html.twig", {
 						menu: menu is defined ? menu : null, 
 						icon: "groups", 
 						slug: "user",
-						name: "Utilisateurs", 
+						name: "Membres", 
 						href: path('admin_user_index')}) 
 					}}
-
 				{% endif %}
 
 				{% if is_granted("ROLE_ALLOWED_TO_SWITCH") or is_granted('IS_IMPERSONATOR') %}

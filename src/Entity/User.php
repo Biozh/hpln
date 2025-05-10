@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -12,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -22,21 +24,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['video:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\Email]
     #[Assert\NotBlank]
+    #[Groups(['video:read'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: "Le prénom est obligatoire.")]
-    #[Assert\Regex(pattern: "/^[a-zA-Z]+$/", message: "Le prénom est invalide.")]
+    #[Assert\Regex(pattern: "/^[\p{L} '-]+$/u", message: "Le prénom est invalide.")]
+    #[Groups(['video:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: "Le nom est obligatoire.")]
-    #[Assert\Regex(pattern: "/^[a-zA-Z]+$/", message: "Le nom est invalide.")]
+    #[Assert\Regex(pattern: "/^[\p{L} '-]+$/u", message: "Le nom est invalide.")]
+    #[Groups(['video:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
@@ -58,6 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?File $picture = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['video:read'])]
     private ?string $pictureName = null;
 
     #[ORM\Column(nullable: true)]
@@ -86,14 +93,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $sidebar = null;
 
     /**
-     * @var Collection<int, Token>
+     * @var Collection<int, Video>
      */
-    #[ORM\OneToMany(targetEntity: Token::class, mappedBy: 'user')]
-    private Collection $tokens;
+    #[ORM\ManyToMany(targetEntity: Video::class, mappedBy: 'users')]
+    private Collection $videos;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['video:read'])]
+    private ?string $role_asso = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['video:read'])]
+    private ?string $description = null;
+
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $showAboutPage = null;
 
     public function __construct()
     {
         $this->tokens = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -313,31 +332,64 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Token>
+     * @return Collection<int, Video>
      */
-    public function getTokens(): Collection
+    public function getVideos(): Collection
     {
-        return $this->tokens;
+        return $this->videos;
     }
 
-    public function addToken(Token $token): static
+    public function addVideo(Video $video): static
     {
-        if (!$this->tokens->contains($token)) {
-            $this->tokens->add($token);
-            $token->setUser($this);
+        if (!$this->videos->contains($video)) {
+            $this->videos->add($video);
+            $video->addUser($this);
         }
 
         return $this;
     }
 
-    public function removeToken(Token $token): static
+    public function removeVideo(Video $video): static
     {
-        if ($this->tokens->removeElement($token)) {
-            // set the owning side to null (unless already changed)
-            if ($token->getUser() === $this) {
-                $token->setUser(null);
-            }
+        if ($this->videos->removeElement($video)) {
+            $video->removeUser($this);
         }
+
+        return $this;
+    }
+
+    public function getRoleAsso(): ?string
+    {
+        return $this->role_asso;
+    }
+
+    public function setRoleAsso(string $role_asso): static
+    {
+        $this->role_asso = $role_asso;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function isShowAboutPage(): ?bool
+    {
+        return $this->showAboutPage;
+    }
+
+    public function setShowAboutPage(bool $showAboutPage): static
+    {
+        $this->showAboutPage = $showAboutPage;
 
         return $this;
     }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}HPLN Prod.{% endblock %}</title>
+        <link rel="icon" href="{{asset('assets/img/favicon_customer.svg')}}">        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('hpln') }}
+        {% endblock %}
+
+        <script>
+            const APP_ASSETS_URL = '{{ absolute_url(path('front_index')) }}';
+            const APP_VIDEOS = JSON.parse({{ videos|json_encode|raw }});
+            const APP_CATEGORIES = JSON.parse({{ categories|json_encode|raw }});
+            const APP_ABOUT_USERS = JSON.parse({{ aboutUsers|json_encode|raw }});
+
+            const APP_CMS_category1 = JSON.parse({{ description1|json_encode|raw }});
+            const APP_CMS_category2 = JSON.parse({{ description2|json_encode|raw }});
+
+            const APP_CONTACT_URL = '{{ path('front_contact') }}';
+        </script>
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('hpln') }}
+        {% endblock %}
+
+        <!-- Matomo -->
+        <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//matomo.hector-bidan.fr/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+        <!-- End Matomo Code -->
+
+    </head>
+    <body class="">
+        <div id="root"></div>
+    </body>
+</html>

@@ -24,10 +24,11 @@ class ErrorController extends AbstractController
 
         // Si l'utilisateur est connecté et qu'il essaye d'accéder à une URL /admin
         if (str_contains($uri, '/admin')) {
-            $this->addFlash('danger', "La page demandée n'existe pas.");
+            $this->addFlash('warning', "La page demandée n'existe pas.");
             return $this->redirectToRoute('admin_index');
         }
 
-        return $this->redirectToRoute('admin_index');
+        // Sinon, on redirige vers le front
+        return $this->redirectToRoute('front_index');
     }
 }

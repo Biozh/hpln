@@ -1,0 +1,73 @@
+    
+{{ form_start(form, {'attr': {
+    'method': 'POST', 
+    'action': path('admin_cms_projects_form', {id: form.vars.value.id}), 
+    'novalidate': 'novalidate', 
+    'class': 'needs-validation ajaxForm',
+    'id': 'video-form',
+    'enctype': 'multipart/form-data',
+    'data-url': path('admin_cms_projects_form', {id: form.vars.value.id}),
+}}) }}
+    <div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="mb-3">
+                    {{ form_widget(form.title) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-3">
+                    {{ form_label(form.description) }}
+                    {{ form_widget(form.description) }}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-3">
+                    {{ form_widget(form.url) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-3">
+                    {{ form_widget(form.category) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-3">
+                    {{ form_widget(form.users) }}
+                </div>
+            </div>
+        </div>
+
+        {% if form_errors(form) %}
+            <div class="row mb-3">
+                <div class="col-12 text-danger">
+                    {{ form_errors(form) }}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex align-items-center">
+                <button class="btn btn-success me-2" type="submit">Sauvegarder</button>
+                <button class="btn btn-sm btn-secondary h-auto flex-center" type="reset" data-bs-toggle="tooltip" data-bs-title="Réinitialiser">
+                    <span class="material-symbols-rounded fs-6">restart_alt</span>
+                </button>
+                </div>
+            </div>
+        </div>
+{{ form_end(form) }}

@@ -1,0 +1,16 @@
+twig:
+    file_name_pattern: '*.twig'
+    form_themes: ['form/default.html.twig']
+
+    globals:
+        PROJECT_NAME: '%env(PROJECT_NAME)%'
+        PROJECT_HEADLINE: '%env(PROJECT_HEADLINE)%'
+        PROJECT_DESCRIPTION: '%env(PROJECT_DESCRIPTION)%'
+        PROJECT_PRIMARY_COLOR: '%env(PROJECT_PRIMARY_COLOR)%'
+        PROJECT_SECONDARY_COLOR: '%env(PROJECT_SECONDARY_COLOR)%'
+
+        MAILER_NAME: '%env(MAILER_NAME)%'
+        MAILER_DOMAIN: '%env(MAILER_DOMAIN)%'
+when@test:
+    twig:
+        strict_variables: true

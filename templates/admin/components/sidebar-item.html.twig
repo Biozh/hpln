@@ -1,0 +1,12 @@
+
+<li class="nav-item mb-3 flex-grow-1">
+    <a href="{{href is defined ? href : '#'}}" class="sidebar-menu nav-link {{menu is defined and slug is defined and menu == slug ? " active bg-body-secondary" : " text-body"}} align-middle d-flex justify-content-start px-4 py-3">
+        {% if icon is defined %}
+            <span class="material-symbols-rounded fs-4 sidebar-menu-icon">{{icon}}</span>
+        {% endif %}
+        {% if icon_html is defined %}
+            {{icon_html|raw}}
+        {% endif %}
+        <span class="ms-2 sidebar-menu-title">{{name is defined ? name : "Menu"}}</span>
+    </a>
+</li>

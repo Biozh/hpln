@@ -1,0 +1,152 @@
+{% if length_menu is not defined %}
+	{% set length_menu = '[[10, 50, 100, 150], [10, 50, 100, 150]]' %}
+{% endif %}
+
+{% if defaultLength is not defined %}
+	{% set defaultLength = '10' %}
+{% endif %}
+
+{# default sorting #}
+{% if sorting_default is not defined %}
+	{% set sorting_default = [] %}
+	{% set found_sortable = false %}
+	{% for index, column in columns %}
+		{% if column.sort and not found_sortable %}
+			{% set sorting_default = [[index, 'asc']] %}
+			{% set found_sortable = true %}
+		{% endif %}
+	{% endfor %}
+	{% set sorting_default = sorting_default|json_encode %}
+{% endif %}
+
+
+{# default ordering #}
+{% if not_orderable is not defined %}
+	{% set not_orderable = [] %}
+	{% for index, column in columns %}
+		{% if not column.sort %}
+			{% set not_orderable = not_orderable | merge([index]) %}
+		{% endif %}
+	{% endfor %}
+	{% set not_orderable = []|json_encode %}
+{% endif %}
+
+{% set show_filters = false %}
+{% set show_search = false %}
+
+{% for column in columns %}
+	{% if column.filter %}				
+		{% set show_filters = true %}
+	{% endif %}
+	{% if column.search %}
+		{% set show_search = true %}
+	{% endif %}
+{% endfor %}
+
+
+<div class="card bg-body">
+	<div class="card-body px-0">
+		{% if show_filters %}
+			<div class="dropdown filter mb-2">
+				<button type="button" class="ms-3 btn btn-outline-primary dropdown-toggle flex-center" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+					<span class="material-symbols-rounded me-2">filter_alt</span>
+					Filtrer &nbsp;
+				</button>
+				<div class="dropdown-menu p-3 bg-body">
+					<form>
+						{% for column in columns %}
+							{% set index = loop.index - 1 %}
+							{% if column.filter %}
+								{% if column.type is defined %}
+									{% if column.type == "select" and column.choices is defined %}
+										<div class="mb-3">
+											<label for="col_{{index}}_filter" class="form-label">{{column.title}}</label>
+											<div class="d-flex align-items-center small">
+												<label for="col_{{index}}_filter" class="flex-center position-absolute ps-2">
+													<span class="material-symbols-rounded fs-6 text-muted" style="z-index: 2">search</span>
+												</label>
+												<select type="text" data-dropdown-auto-width="true" class="form-control table-filter select2 w-100" id="col_{{index}}_filter" data-filter="{{index}}" data-icon>
+													{% for key, value in column.choices %}
+														<option value="{{key}}">{{value}}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+									{% endif %}
+								{% else %}
+									<div class="mb-3">
+										<label for="col_{{index}}_filter" class="form-label">{{column.title}}</label>
+										<div class="d-flex align-items-center small">
+											<label for="col_{{index}}_filter" class="flex-center position-absolute ps-2">
+												<span class="material-symbols-rounded fs-6 text-muted">search</span>
+											</label>
+											<input type="text" class="form-control" id="col_{{index}}_filter" data-filter="{{index}}" style="padding-left: 28px;"/>
+										</div>
+									</div>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+						<div class="row align-items-center">
+							<div class="col-auto">
+								<a role="button" data-bs-dismiss="dropdown">Annuler</a>
+							</div>
+							<div class="col text-end">
+								<button type="reset" class="btn btn-secondary">Réinitialiser</button>
+								<button type="submit" class="btn btn-primary">Appliquer</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		{% endif %}
+		<table class="datatable table table-responsive table-striped" data-url="{{ data_url }}" data-default-length="{{defaultLength}}" data-sorting-default="{{ sorting_default }}" data-not-orderable="{{ not_orderable }}" data-length-menu="{{ length_menu }}">
+			<thead>
+				{% if show_search %}
+					<tr role="row" class="filter">
+						{% for column in columns %}
+							{% set index = loop.index - 1 %}
+							{% if column.search %}
+							
+								{% if column.type is defined %}
+									{% if column.type == "select" and column.choices is defined %}
+										<td>
+											<div class="d-flex align-items-center small">
+												<label for="col_{{index}}_search" class="flex-center position-absolute ps-2">
+													<span class="material-symbols-rounded fs-6 text-muted" style="z-index: 2">search</span>
+												</label>
+												<select class="form-control table-filter select2 w-100" id="col_{{index}}_search" data-filter="{{index}}" data-icon data-dropdown-auto-width="true">
+													{% for key, value in column.choices %}
+														<option value="{{key}}">{{value}}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</td>
+									{% endif %}
+								{% else %}
+								<td>
+									<div class="d-flex align-items-center small">
+										<label for="col_{{index}}_search" class="flex-center position-absolute ps-2">
+											<span class="material-symbols-rounded fs-6 text-muted">search</span>
+										</label>
+										<input type="text" class="form-control table-filter" id="col_{{index}}_search" data-filter="{{index}}" style="padding-left: 28px;"/>
+									</div>
+								</td>
+								{% endif %}
+							{% else %}
+								<td></td>
+							{% endif %}
+						{% endfor %}
+					</tr>
+				{% endif %}
+
+				<tr>
+					{% for column in columns %}
+						{% set index = loop.index - 1 %}
+						<th {% if column.sort is same as(false) %} data-not-orderable {% endif %} data-name="{{column.name}}" class="{% if column.name == "actions" %}text-end{% endif %}">{{column.title}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+</div>

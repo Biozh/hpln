@@ -1,0 +1,67 @@
+<div id="sidebar" class="{{app.user.sidebar == "mini" ? "mini" : ""}}">
+	<div class="bg-body rounded w-100">
+		<ul class="nav nav-pills flex-column mb-auto mb-0 py-3 px-2 align-items-stretch w-100" id="menu">
+
+			<li class="nav-item mb-3 flex-grow-1 sidebar-separator">
+				<div class="px-1">
+					<small class="text-body-secondary">Mon espace</small>
+				</div>
+			</li>
+
+			{{ include("admin/components/sidebar-item.html.twig", {
+				menu: menu is defined ? menu : null, 
+				icon_html: '<span><svg width="24" height="24" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M15.8459 36.8932C20.5582 36.8932 24.3783 40.7098 24.3783 45.4177V101.435C24.3783 106.143 20.5582 109.96 15.8459 109.96H8.53242C3.82015 109.96 4.85611e-05 106.143 0 101.435V45.4177C1.90824e-05 40.7098 3.82013 36.8932 8.53242 36.8932H15.8459Z" fill="currentcolor"/>
+					<path d="M15.8459 0.360107C20.5582 0.360107 24.3783 4.17666 24.3783 8.88456V16.1912C24.3783 20.8991 20.5582 24.7156 15.8459 24.7156H8.53242C3.82014 24.7156 1.76326e-05 20.8991 0 16.1912V8.88456C-6.17943e-07 4.17667 3.82013 0.360124 8.53242 0.360107H15.8459Z" fill="currentcolor"/>
+					<path d="M101.17 85.6043C105.882 85.6043 109.702 89.4209 109.702 94.1287V101.435C109.702 106.143 105.882 109.96 101.17 109.96H45.0998C40.3875 109.96 36.5674 106.143 36.5674 101.435V94.1287C36.5674 89.4208 40.3875 85.6043 45.0998 85.6043H101.17Z" fill="currentcolor"/>
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M101.17 0.360107C105.882 0.360201 109.702 4.17671 109.702 8.88456V64.9022C109.702 69.61 105.882 73.4262 101.17 73.4263H45.0998C40.3876 73.4263 36.5675 69.61 36.5674 64.9022V8.88456C36.5674 4.17666 40.3875 0.360118 45.0998 0.360107H101.17ZM69.4781 24.7156C64.7658 24.7156 60.9457 28.5322 60.9457 33.2401V40.5467C60.9457 45.2546 64.7659 49.0711 69.4781 49.0711H76.7916C81.5038 49.0711 85.324 45.2545 85.324 40.5467V33.2401C85.324 28.5322 81.5038 24.7157 76.7916 24.7156H69.4781Z" fill="currentcolor"/>
+					</svg></span>
+					', 
+				slug: "dashboard",
+				name: "Tableau de bord", 
+				href: path('admin_index')}) 
+			}}
+
+			{% if is_granted("ROLE_ADMIN") or is_granted('IS_IMPERSONATOR') %}
+				<li class="nav-item mb-3 flex-grow-1 sidebar-separator">
+					<div class="px-1">
+						<hr class="my-3"/>
+						<small class="text-body-secondary">Administration</small>
+					</div>
+				</li>
+
+				{% if is_granted("ROLE_ADMIN") %}
+
+					{{ include("admin/components/sidebar-item.html.twig", {
+						menu: menu is defined ? menu : null, 
+						icon: "groups", 
+						slug: "user",
+						name: "Utilisateurs", 
+						href: path('admin_user_index')}) 
+					}}
+
+				{% endif %}
+
+				{% if is_granted("ROLE_ALLOWED_TO_SWITCH") or is_granted('IS_IMPERSONATOR') %}
+					{% if not is_granted('IS_IMPERSONATOR') %}
+						{{ include("admin/components/sidebar-item.html.twig", {
+							menu: menu is defined ? menu : null, 
+							icon: "group", 
+							slug: "switch",
+							name: "Switch", 
+							href: path('admin_switch_index')}) 
+						}}
+					{% else %}
+						{{ include("admin/components/sidebar-item.html.twig", {
+							menu: menu is defined ? menu : null, 
+							icon: "logout", 
+							slug: "switch",
+							name: "Quitter mode switch", 
+							href: path('admin_index', {'_switch_user': '_exit'})}) 
+						}}
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		</ul>
+	</div>
+</div>

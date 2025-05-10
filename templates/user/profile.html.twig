@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% set page_name = "Mon profil" %}
+
+{% block title %}
+	{{page_name}}
+{% endblock %}
+
+{% set user = form.vars.value %}
+
+{% block body %}
+
+	<div class="bg-body rounded p-4">
+		<div class="row align-items-center mb-4">
+			<div class="col-auto">
+				<h1 class="fs-4 mb-0">{{ page_name is defined ? page_name : "" }}</h1>
+			</div>
+		</div>
+
+        {{ include("user/_form.html.twig", {"form": form}) }}
+{% endblock %}

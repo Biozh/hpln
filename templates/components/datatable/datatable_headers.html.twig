@@ -1,0 +1,22 @@
+<thead>
+    <tr role="row" class="filter">
+        {% for field in header_fields %}
+            <td>
+                <div class="d-flex align-items-center small">
+                    <label for="{{ field.id }}" class="flex-center position-absolute ps-2">
+                        <span class="material-symbols-rounded fs-6 text-muted">search</span>
+                    </label>
+                    <input type="text" class="form-control table-filter" id="{{ field.id }}" data-filter="{{ field.data_filter }}" style="padding-left: 28px;" />
+                </div>
+            </td>
+        {% endfor %}
+        <td></td> <!-- Placeholder for the last column -->
+    </tr>
+    <tr>
+        {% for col in columns %}
+            <th {{ col.not_orderable is defined ? 'data-not-orderable' : '' }} class="">
+                {{ col.title }}
+            </th>
+        {% endfor %}
+    </tr>
+</thead>

@@ -1,0 +1,25 @@
+<div class="dropdown filter mb-3">
+    <button type="button" class="ms-3 btn btn-outline-primary dropdown-toggle flex-center" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        <span class="material-symbols-rounded me-2">filter_alt</span>
+        Filtrer &nbsp;
+    </button>
+    <div class="dropdown-menu p-3">
+        <form id="dropdownFilterForm">
+            {% for field in filter_fields %}
+                <div class="mb-3">
+                    <label for="{{ field.id }}" class="form-label">{{ field.label }}</label>
+                    <input type="text" class="form-control" id="{{ field.id }}" data-filter="{{ field.data_filter }}" placeholder="{{ field.placeholder }}">
+                </div>
+            {% endfor %}
+            <div class="row">
+                <div class="col">
+                    <a role="button" data-bs-dismiss="dropdown">Annuler</a>
+                </div>
+                <div class="col text-end">
+                    <button type="reset" class="btn btn-secondary">Réinitialiser</button>
+                    <button type="submit" class="btn btn-primary">Appliquer</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

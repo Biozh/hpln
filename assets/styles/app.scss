@@ -1,0 +1,504 @@
+// Custom.scss
+// Option B: Include parts of Bootstrap
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../../node_modules/bootstrap/scss/functions";
+
+// 2. Include any default variable overrides here
+$color-mode-type: data;
+$primary: $env-primary-color;
+$secondary: $env-secondary-color;
+
+$dark: #202222;
+$light: #E7E0E2;
+
+
+// 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/variables-dark";
+
+// 4. Include any default map overrides here
+
+$custom-colors: (
+    "primary": $primary,
+    "secondary": $secondary,
+    "dark": $dark,
+    "light": $light,
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+$body-tertiary-bg: $dark;
+$body-bg: #fff;
+
+$pagination-hover-bg: $pagination-focus-bg;
+$form-file-button-bg: $form-file-button-hover-bg;
+$dropdown-link-hover-bg: $form-file-button-hover-bg;
+
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Quicksand:wght@300..700&display=swap');
+
+
+$font-family-sans-serif: "Quicksand", sans-serif;
+$headings-font-weight: 700;
+
+
+// 5. Include remainder of required parts
+@import "../../node_modules/bootstrap/scss/maps";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/root";
+
+// 6. Optionally include any other parts as needed
+@import "../../node_modules/bootstrap/scss/utilities";
+@import "../../node_modules/bootstrap/scss/reboot";
+@import "../../node_modules/bootstrap/scss/type";
+
+@import "../../node_modules/bootstrap/scss/tables";
+@import "../../node_modules/bootstrap/scss/containers";
+@import "../../node_modules/bootstrap/scss/forms";
+@import "../../node_modules/bootstrap/scss/buttons";
+@import "../../node_modules/bootstrap/scss/button-group";
+@import "../../node_modules/bootstrap/scss/list-group";
+@import "../../node_modules/bootstrap/scss/offcanvas";
+@import "../../node_modules/bootstrap/scss/grid";
+@import "../../node_modules/bootstrap/scss/card";
+@import "../../node_modules/bootstrap/scss/nav";
+@import "../../node_modules/bootstrap/scss/navbar";
+@import "../../node_modules/bootstrap/scss/pagination";
+@import "../../node_modules/bootstrap/scss/dropdown";
+@import "../../node_modules/bootstrap/scss/forms/";
+@import "../../node_modules/bootstrap/scss/accordion";
+@import "../../node_modules/bootstrap/scss/transitions";
+@import "../../node_modules/bootstrap/scss/modal";
+@import "../../node_modules/bootstrap/scss/tooltip";
+@import "../../node_modules/bootstrap/scss/spinners";
+@import "../../node_modules/bootstrap/scss/alert";
+@import "../../node_modules/bootstrap/scss/badge";
+
+
+// 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
+@import "../../node_modules/bootstrap/scss/utilities/api";
+
+@import "~datatables.net-bs5/css/dataTables.bootstrap5.min.css";
+@import "~datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css";
+
+// 8. Add additional custom code here
+
+@import "./general";
+
+.cover {
+    background-position: center;
+    background-size: cover;
+    object-position: center;
+    object-fit: cover;
+}
+
+
+.material-symbols-rounded {
+    font-family: "Material Symbols Rounded";
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.invalid-focus {
+    outline: 0 !important;
+    box-shadow: 0 0 0 $focus-ring-width rgba($danger, $focus-ring-opacity) !important;
+    border-color: #e89e9e !important;
+}
+
+.valid-focus {
+    outline: 0 !important;
+    box-shadow: 0 0 0 $focus-ring-width rgba($success, $focus-ring-opacity) !important;
+    border-color: $success !important;
+}
+
+.primary-focus {
+    outline: 0;
+    box-shadow: 0 0 0 $focus-ring-width rgba($primary, $focus-ring-opacity);
+    border-color: #e89e9e;
+}
+
+.was-validated .is-invalid,
+.was-validated .form-control:invalid {
+    @extend .invalid-focus;
+}
+
+.was-validated .is-valid,
+.was-validated .form-control:valid {
+    @extend .valid-focus;
+}
+
+
+#sidebar .sidebar-menu {
+    &:not(span):hover {
+        @extend .bg-body-secondary;
+    }
+
+    &.active {
+        color: $primary;
+    }
+
+    &.sidebar-dropdown {
+        position: relative;
+    }
+
+    &.sidebar-dropdown:after {
+        content: '';
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+        flex-shrink: 0;
+        width: $accordion-icon-width;
+        height: $accordion-icon-width;
+        margin-left: auto;
+        background-repeat: no-repeat;
+        background-size: $accordion-icon-width;
+        transition: $accordion-icon-transition;
+        position: absolute;
+        right: 1em;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(-180deg);
+    }
+
+    &.sidebar-dropdown.collapsed:after {
+        transform: translate(-50%, -50%);
+    }
+}
+
+// sidebar
+@include media-breakpoint-up(sm) {
+    $transition-delay: .3s;
+    $max-width: 250px;
+    $size: calc(100% - $max-width);
+    $miniSize: calc(100% - 88px);
+
+    #sidebar {
+        overflow: hidden;
+        padding: 0;
+        display: flex;
+        max-width: $max-width;
+        transition: max-width $transition-delay ease 0s;
+        height: 100%;
+        max-width: $max-width;
+
+        .sidebar-menu-title {
+            font-weight: 700;
+        }
+
+        &.mini {
+            max-width: 88px;
+        }
+
+        .sidebar-separator small,
+        .sidebar-menu {
+            white-space: nowrap;
+        }
+
+        &.mini .sidebar-dropdown::after {
+            opacity: 0;
+            transition: opacity $transition-delay ease, transform .2s ease;
+        }
+
+        &.mini .sidebar-menu-title,
+        &.mini .sidebar-separator small {
+            opacity: 0;
+            transition: opacity $transition-delay ease;
+        }
+
+        &.mini .nav-item {
+            width: 100%;
+            transition: width $transition-delay ease;
+        }
+
+        &.mini:has(.collapsing):has(.collapse.show):hover {
+            transition-delay: 1s;
+
+            max-width: $max-width;
+
+            .sidebar-menu-title,
+            .sidebar-separator small {
+                transition: opacity $transition-delay ease;
+                opacity: 1;
+            }
+
+            .sidebar-dropdown::after {
+                opacity: 1;
+                transition: opacity .4s ease 1s, transform .2s ease;
+            }
+
+            &~div {
+                transition-delay: 1s;
+                width: $size !important;
+            }
+        }
+
+        &.mini:has(.collapse.show),
+        &.mini:has(.collapsing) {
+            transition-delay: 0s !important;
+            max-width: $max-width;
+
+            .sidebar-menu-title,
+            .sidebar-separator small,
+            .sidebar-dropdown::after {
+                opacity: 1;
+            }
+
+            &~div {
+                width: $size !important;
+            }
+        }
+
+        &~div {
+            transition: width $transition-delay ease;
+            overflow: hidden;
+            width: $size !important;
+        }
+
+        &.mini~div {
+            width: $miniSize !important;
+        }
+    }
+
+}
+
+
+@include media-breakpoint-down(sm) {
+    $transition-delay: .3s;
+
+    #sidebar {
+        overflow: hidden;
+        padding: 0;
+        transition: max-height .4s ease;
+        max-height: 0;
+
+        &~div {
+            overflow: hidden;
+            padding: 0;
+        }
+
+        &.opened {
+            margin-bottom: 1rem;
+            max-height: 500px;
+            ;
+        }
+    }
+
+}
+
+.table tbody td {
+    vertical-align: middle;
+}
+
+.was-validated .select2:invalid+.select2 .select2-selection {
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.was-validated .select2:valid+.select2 .select2-selection {
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.was-validated .select2:valid+.select2 .select2-selection {
+    border-color: $form-valid-border-color !important;
+    color: $form-valid-color !important;
+}
+
+.was-validated .select2:invalid+.select2 .select2-selection {
+    border-color: $form-invalid-border-color !important;
+    color: $form-invalid-color !important;
+}
+
+.select2:disabled+.select2 .select2-selection__choice {
+    background-color: $body-secondary-bg !important;
+    margin-bottom: 0 !important;
+}
+
+.select2-container--bootstrap-5.select2-container--focus .select2-selection,
+.select2-container--bootstrap-5.select2-container--open .select2-selection {
+    // box-shadow: 0 0 0 0.25rem rgba(106, 163, 102, 0.25);
+    @extend .primary-focus;
+}
+
+.select2:not(:valid):not(:invalid)+.select2.select2-container--focus .select2-selection,
+.select2:not(:valid):not(:invalid)+.select2.select2-container--open .select2-selection {
+    @extend .primary-focus;
+}
+
+.select2-container--disabled .select2-selection {
+    background-color: $body-bg !important;
+}
+
+select.select2.w-100~span.select2 {
+    width: 100% !important;
+}
+
+
+select.select2[data-icon]~span.select2 .select2-selection {
+    padding-left: 28px;
+}
+
+.was-validated .select2:invalid .select2-container--focus .select2-selection,
+.was-validated .select2:invalid .select2-container--open .select2-selection {
+    @extend .invalid-focus;
+}
+
+.was-validated .select2:valid .select2-container--focus .select2-selection,
+.was-validated .select2:valid .select2-container--open .select2-selection {
+    @extend .valid-focus;
+}
+
+.select2-selection__choice__remove:hover {
+    color: $body-color !important;
+}
+
+.select2:disabled+.select2 .select2-selection * {
+    cursor: default !important;
+}
+
+.select2:disabled+.select2 {
+    pointer-events: none !important;
+}
+
+.select2 {
+
+    .select2-selection__choice {
+        @extend .form-control;
+        border-color: $border-color !important;
+        width: auto !important;
+    }
+
+    .select2-selection__choice__remove {
+        @extend .btn, .btn-sm;
+    }
+
+    .select2-search {
+        @extend .form-control;
+        height: auto !important;
+    }
+
+    .select2-selection__choice__display {
+        @extend .text-body;
+    }
+
+}
+
+.select2-results__option--selected {
+    background-color: $primary !important;
+}
+
+.select2-results__option:empty {
+    background-color: $body-secondary-bg !important;
+    color: $body-secondary-color !important;
+}
+
+.select2-selection__rendered {
+    color: $body-color !important;
+}
+
+.select2-dropdown {
+    border-color: $border-color !important;
+}
+
+.select2-results__option:empty::after {
+    content: "Aucun";
+    font-style: italic;
+}
+
+.select2-selection__choice__remove:hover {
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%212529'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") 50%/.75rem auto no-repeat !important;
+}
+
+// DATEPICKER
+.ui-datepicker {
+    @extend .card;
+    width: auto;
+    border-color: $border-color;
+
+    .ui-datepicker-header {
+        @extend .card-header;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ui-helper-clearfix:before,
+    .ui-helper-clearfix:after {
+        content: '';
+        display: none;
+    }
+
+    thead,
+    tbody,
+    tfoot,
+    tr,
+    td,
+    th {
+        text-align: center;
+    }
+
+    .ui-datepicker-calendar td a {
+        @extend .btn;
+        background-image: none !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    .ui-state-active,
+    .ui-state-hover {
+        @extend .btn-primary;
+        background-color: $primary !important;
+    }
+
+    .ui-datepicker-today a:not(.ui-state-active, .ui-state-hover) {
+        @extend .btn-secondary;
+        background-color: $secondary !important;
+    }
+
+    .ui-datepicker-prev {
+        @extend .btn;
+        background-image: none !important;
+        order: 1;
+
+        .ui-icon::before {
+            content: 'arrow_back_ios';
+        }
+    }
+
+    .ui-datepicker-next {
+        @extend .btn;
+        background-image: none !important;
+        order: 3;
+
+        .ui-icon::before {
+            content: 'arrow_forward_ios';
+        }
+    }
+
+    .ui-datepicker-title {
+        order: 2;
+    }
+
+    .ui-icon {
+        @extend .material-symbols-rounded;
+    }
+}

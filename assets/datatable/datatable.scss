@@ -1,0 +1,65 @@
+@import "../styles/app.scss";
+
+.datatable .filter .dt-orderable-asc,
+.datatable .filter .dt-orderable-desc {
+    pointer-events: none;
+    padding-right: 8px;
+}
+
+.datatable .filter .dt-column-order {
+    display: none;
+}
+
+.datatable .filter .table-filter,
+.datatable .filter .select2 {
+    pointer-events: all;
+}
+
+.datatable .dt-orderable-desc:hover {
+    outline: none !important;
+}
+
+.dt-paging .pagination {
+    flex-wrap: nowrap !important;
+}
+
+.dt-length label {
+    @extend .flex-center, .gap-2, .h-100;
+}
+
+.dtr-details {
+    width: 100%;
+}
+
+.datatable.collapsed thead tr td:first-child:not(.child),
+.datatable.collapsed tbody tr td:first-child:not(.child) {
+    padding-left: 1.8rem;
+}
+
+
+.dtr-control {
+    position: relative;
+}
+
+.dtr-control::before {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 0.5rem;
+
+    border-left-color: $body-color-dark;
+}
+
+.dtr-expanded .dtr-control::before {
+    border-top-color: $body-color-dark;
+    border-left-color: transparent;
+}
+
+.dt-length label {
+    display: flex;
+
+    input {
+        margin-inline: 5px;
+    }
+}

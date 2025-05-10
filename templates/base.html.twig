@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <meta name="description" content="Symfony 5.3.9">
+        <meta name="author" content="Symfony Community">
+
+        <title>{{PROJECT_NAME}} | {% block title %}{% endblock %}</title>
+        <link rel="icon" href="{{asset('assets/img/favicon.svg')}}" type="image/svg+xml">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{asset('assets/img/apple-touch-icon.png')}}">        
+
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+        
+        {# theme #}
+        <script src="{{ asset('assets/js/theme.js') }}"></script>
+        
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+
+
+    </head>
+    <body class="bg-body-tertiary vh-100">
+    
+        {# ALERTS #}
+        <div class="alert-container position-fixed fixed-top w-100" style="z-index: 999">
+            {{ include('admin/components/alerts.html.twig') }}
+            {{ include('admin/components/flashes.html.twig') }}
+        </div>
+
+        <div class="container-fluid d-flex flex-column h-100">
+            {{ include('admin/components/header.html.twig') }}
+
+            <div class="row flex-column flex-sm-row flex-grow-1 p-3 pt-0">
+
+                {{ include('admin/components/sidebar.html.twig') }}
+
+                <div class="pe-0 ps-md-3">
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </div>
+        {% block javascript %}
+        {% endblock %}
+    </body>
+</html>

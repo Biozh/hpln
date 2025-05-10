@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% set page_name = "Datatable" %}
+{% set menu = "datatable" %}
+
+{# Configurations DataTable #}
+{% set data_url = path('admin_features_datatable') %}
+
+{% if length_menu is not defined %}
+    {% set length_menu = '[[10, 50, 100, 150], [10, 50, 100, 150]]' %}
+{% endif %}
+
+{% if defaultLength is not defined %}
+    {% set defaultLength = '10' %}
+{% endif %}
+
+{% if sorting_default is not defined %}
+    {% set sorting_default = [] %}
+    {% set found_sortable = false %}
+    {% for index, column in columns %}
+        {% if column.sort and not found_sortable %}
+            {% set sorting_default = [[index, 'asc']] %}
+            {% set found_sortable = true %}
+        {% endif %}
+    {% endfor %}
+    {% set sorting_default = sorting_default|json_encode %}
+{% endif %}
+
+{# default ordering #}
+{% if not_orderable is not defined %}
+    {% set not_orderable = [] %}
+    {% for index, column in columns %}
+        {% if not column.sort %}
+            {% set not_orderable = not_orderable | merge([index]) %}
+        {% endif %}
+    {% endfor %}
+    {% set not_orderable = []|json_encode %}
+{% endif %}
+
+
+{% block body %}
+	<div class="bg-body rounded p-4">
+		<div class="row align-items-center mb-4">
+			<div class="col-12 col-md-auto">
+				<h1 class="fs-4 mb-0">{{ page_name is defined ? page_name : "" }}</h1>
+			</div>
+		</div>
+        {% include 'components/datatable/datatable_base.html.twig' %}
+    </div>
+{% endblock %}

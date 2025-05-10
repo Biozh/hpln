@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% set page_name = "Switch" %}
+{% set menu = "switch" %}
+
+{# Configurations DataTable #}
+{% set data_url = path('admin_switch_index') %}
+{% set sorting_default = [0, "asc"] |json_encode %}
+
+{% block title %}
+	{{ page_name }}
+{% endblock %}
+
+{% block body %}
+	<div class="bg-body rounded p-4">
+		<div class="row align-items-center justify-content-start mb-4">
+			<div class="col-12 col-md-auto">
+				<h1 class="fs-4 mb-0">{{ page_name is defined ? page_name : "" }}</h1>
+			</div>		
+		</div>
+        {% include 'components/datatable/datatable_base.html.twig' %}
+    </div>
+{% endblock %}

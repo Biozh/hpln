@@ -1,0 +1,41 @@
+<div class="row p-3">
+	<div class="col-12 bg-body rounded px-4 py-4">
+		<div class="flex-between">
+			<div class="flex-center">
+				<img src="{{asset('assets/img/logo.svg')}}" alt="{{PROJECT_NAME}}" class="me-2 project-icon" height="42">
+				{# <h1 class="fs-3 mb-0 d-none d-lg-block">{{PROJECT_NAME}}</h1> #}
+			</div>
+			<div class="flex-between">
+				<button data-ajax-post="{{path('admin_profile_toggle_sidebar')}}" class="sidebar-toggler d-none d-sm-flex btn btn-link flex-center me-2 text-body text-decoration-none" type="button">
+					<span class="material-symbols-rounded fs-4">{{app.user.sidebar == "mini" ? "menu" : "menu_open"}}</span>
+				</button>
+				<button class="sidebar-toggler d-sm-none btn btn-link flex-center me-2 text-body text-decoration-none" type="button">
+					<span class="material-symbols-rounded fs-4">{{app.user.sidebar == "mini" ? "menu" : "menu_open"}}</span>
+				</button>
+
+				<div class="dropdown">
+					<a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-body" id="dropdown-profile" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+						{% if app.user.pictureName %}
+							<img src="{{ asset('uploads/avatars/') ~ app.user.pictureName}}" alt="{{app.user.firstname}} {{app.user.lastname}}" width="48" height="48" class="rounded-circle cover">
+						{% else %}
+							<div style="width: 30px; height: 30px" class="rounded-circle bg-body-secondary"></div>
+						{% endif %}
+						<span class="mx-3 d-none d-lg-block fw-bold">{{app.user.firstname}} {{app.user.lastname}}</span>
+					</a>
+					<ul
+						class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdown-profile">
+						<li>
+							<a class="dropdown-item" href="{{path('admin_profile_index')}}">Mon profil</a>
+						</li>
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+						<li>
+							<a class="dropdown-item" href="{{path('security_logout')}}">Déconnexion</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

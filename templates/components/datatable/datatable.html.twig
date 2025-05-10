@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% set page_name = "Datatable" %}
+{% set menu = "datatable" %}
+
+{# Configurations DataTable #}
+{% set data_url = path('admin_user_datas') %}
+{% set sorting_default = '[[1, "asc"]]' %}
+{% set not_orderable = '[0, 4]' %}
+{% set length_menu = '[[10, 50, 100, 150], [10, 50, 100, 150]]' %}
+{% set defaultLength = '10' %}
+
+{% set columns = [
+	{
+		title: 'Avatar',
+		name: 'avatar',
+		sort: true,
+		search: false,
+		filter: false,
+	},
+	{
+		title: 'Email',
+		name: 'email',
+		sort: true,
+		search: true,
+		filter: true,
+	},
+	{
+		title: 'Prénom',
+		name: 'firstname',
+		sort: true,
+		search: true,
+		filter: true,
+	},
+	{
+		title: 'Nom',
+		name: 'lastname',
+		sort: true,
+		search: true,
+		filter: true,
+	},
+	{
+		title: 'Actions',
+		name: 'actions',
+		sort: false,
+		search: false,
+		filter: false,
+	}
+] %}
+
+{% block body %}
+    {% include 'components/datatable/datatable_base.html.twig' %}
+{% endblock %}

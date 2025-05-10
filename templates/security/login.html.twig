@@ -1,0 +1,62 @@
+{% extends 'empty_base.html.twig' %}
+
+{% block title %}{{PROJECT_NAME}} - Connexion
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-6 d-flex align-items-center min-vh-100">
+				<div class="container px-lg-4 mx-auto">
+					<div class="card-body d-flex flex-column align-items-center">
+						<img src="{{asset('assets/img/logo.svg')}}" alt="{{PROJECT_NAME}}" class="mb-2" width="150" height="150">
+					</div>
+					<div class="card-body">
+						<form id="loginForm" class="needs-validation" method="post" novalidate action="{{ path('security_login') }}">
+							<div class="row mb-3">
+								<div class="col-12">
+									<label for="inputEmail" class="form-label">Email</label>
+									<input type="email" class="form-control" id="inputEmail" value="{{ last_username }}" name="_username" placeholder="Adresse email" required autofocus>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-12">
+									<label for="password" class="form-label">Mot de passe</label>
+									<input type="password" class="form-control" name="_password" id="inputPassword" placeholder="**********" autocomplete="current-password" required>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-12">
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="" name="_remember_me" id="_remember_me">
+										<label class="form-check-label" for="_remember_me">
+											Se souvenir de moi
+										</label>
+									</div>
+								</div>
+							</div>
+							{% if error %}
+								<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+							{% endif %}
+							<div class="col-12 mb-3">
+								<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+								<button class="btn btn-primary w-100" type="submit">Connexion</button>
+							</div>
+							<div class="col-12 mb-3">
+								<a class="text-muted" href="{{path('security_forgot_password')}}">
+									Mot de passe oublié ?
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 d-flex align-items-center bg-primary text-white">
+				<div class="container px-lg-4 py-5">
+					<h4 class="mb-4">{{PROJECT_HEADLINE}}</h4>
+					<p class="small mb-0" style="max-width: 600px">{{PROJECT_DESCRIPTION}}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

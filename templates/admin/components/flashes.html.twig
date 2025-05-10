@@ -1,0 +1,11 @@
+{% for label, messages in app.flashes %}
+	{% for message in messages %}
+		<div class="alert-flash alert alert-{{label}} m-3 flex-between fade show" role="alert" id="alert-{{label}}">
+			<span class="alert-content">{{message}}</span>
+
+			<div role="button" class="text-decoration-none flex-center" type="buton" data-bs-dismiss="alert">
+				<span class="material-symbols-rounded fs-6">close</span>
+			</div>
+		</div>
+	{% endfor %}
+{% endfor %}

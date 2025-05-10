@@ -1,0 +1,30 @@
+
+{% set collapse_show = false %}
+{% for subItem in items %}
+	{% if subItem.slug is defined and subItem.slug == menu %}
+		{% set collapse_show = true %}
+	{% endif %}
+{% endfor %}
+	
+<li class="nav-item mb-3 flex-grow-1">
+    <a href="#sidebar-item-{{ item.slug }}" data-bs-toggle="collapse" class="sidebar-menu sidebar-dropdown nav-link btn-toggler {{ collapse_show or (menu is defined and item.slug is defined and menu == item.slug) ? "active bg-body-secondary" : " text-body collapsed" }} px-0 align-middle d-flex justify-content-start px-3 px-4 py-3">
+        {% if item.icon is defined %}
+            <span class="material-symbols-rounded fs-4 sidebar-menu-icon">{{ item.icon }}</span>
+        {% endif %}
+        <span class="ms-2 sidebar-menu-title">{{ item.name }}</span>
+    </a>
+
+    {# Vérifier si un subItem.slug correspond au menu pour ajouter "show" #}
+
+    <div class="collapse {{ collapse_show and app.user.sidebar != "mini" ? "show" : "" }}" data-bs-parent="#sidebar-item-{{ item.slug }}" id="sidebar-item-{{ item.slug }}">
+        <div>
+            {% for subItem in items %}
+                <ul class="nav flex-column mt-2">
+                    <a href="{{ subItem.href is defined ? subItem.href : '' }}" class="sidebar-menu sidebar-submenu nav-link align-middle {{ subItem.slug is defined and subItem.slug == menu ? " active bg-body-secondary" : " text-body" }} px-0 d-flex justify-content-start px-4 py-3">
+                        <span class="sidebar-menu" style="margin-left: calc(24px + 0.5rem);">{{ subItem.name }}</span>
+                    </a>
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+</li>

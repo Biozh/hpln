@@ -71,11 +71,6 @@ export default function Legals() {
 
                         <h5>Données personnelles</h5>
                         <p>
-                            Le traitement de vos données personnelles est régi par notre Charte de Protection des Données Personnelles,
-                            disponible dans la section correspondante du site, conformément au Règlement Général sur la Protection des Données
-                            2016/679 du 27 avril 2016 (RGPD).
-                        </p>
-                        <p>
                             L'association <strong>HPLN</strong> est responsable du traitement des données.
                             La société <strong>Biozh</strong> intervient en tant que sous-traitant technique, avec un accès aux données uniquement
                             dans le cadre de la maintenance et de l'hébergement du site.

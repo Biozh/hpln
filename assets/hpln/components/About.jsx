@@ -21,10 +21,10 @@ export default function About() {
                             </Col>
                         </Row>
 
-                        <img src={frame_angle} className="pe-3 pb-3 position-absolute top-0 start-0 w-25 " style={{ maxWidth: "100px" }} />
-                        <img src={frame_angle} className="rotate-90 pe-3 pb-3 position-absolute top-0 end-0 w-25 " style={{ maxWidth: "100px" }} />
-                        <img src={frame_angle} className="rotate-n90 pe-3 pb-3 position-absolute bottom-0 start-0 w-25 " style={{ maxWidth: "100px" }} />
-                        <img src={frame_angle} className="rotate-180 pe-3 pb-3 position-absolute bottom-0 end-0 w-25 " style={{ maxWidth: "100px" }} />
+                        <img src={frame_angle} className="pe-3 pb-3 position-absolute top-0 start-0 w-25 " style={{ pointerEvents: "none", maxWidth: "100px" }} />
+                        <img src={frame_angle} className="rotate-90 pe-3 pb-3 position-absolute top-0 end-0 w-25 " style={{ pointerEvents: "none", maxWidth: "100px" }} />
+                        <img src={frame_angle} className="rotate-n90 pe-3 pb-3 position-absolute bottom-0 start-0 w-25 " style={{ pointerEvents: "none", maxWidth: "100px" }} />
+                        <img src={frame_angle} className="rotate-180 pe-3 pb-3 position-absolute bottom-0 end-0 w-25 " style={{ pointerEvents: "none", maxWidth: "100px" }} />
                     </div>
                 </Container>
             </div>

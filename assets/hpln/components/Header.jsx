@@ -63,6 +63,28 @@ export default function Header() {
     return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault(); // 🚫 Empêche l'ajout de # dans l'URL
+
+        const targetId = link.getAttribute('href').replace('#', '');
+        const target = document.getElementById(targetId);
+
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    return () => {
+      navLinks.forEach((link) => {
+        link.removeEventListener('click', () => { });
+      });
+    };
+  }, []);
 
 
   return (

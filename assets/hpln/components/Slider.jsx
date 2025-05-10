@@ -181,7 +181,7 @@ export default function Slider() {
                                     )}
                                 </Col>
                                 <p
-                                    className="flex-center w-100"
+                                    className="flex-center w-100 mb-0"
                                     dangerouslySetInnerHTML={{ __html: currentSlide.description }}
                                     style={{ minHeight: "8vh" }}
                                 />

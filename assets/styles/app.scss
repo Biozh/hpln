@@ -148,6 +148,8 @@ $headings-font-weight: 700;
         @extend .bg-body-secondary;
     }
 
+    align-items: center;
+
     &.active {
         color: $primary;
     }

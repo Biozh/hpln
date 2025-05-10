@@ -220,7 +220,6 @@ export default function Slider() {
                                             videoId={extractYouTubeID(video.url)}
                                             index={i}
                                             setPlayer={setPlayer}
-                                            onPlay={() => console.log("Vidéo lancée :", video.title)}
                                         />
                                     </swiper-slide>
                                 ))}

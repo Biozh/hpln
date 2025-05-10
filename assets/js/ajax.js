@@ -15,50 +15,59 @@ $("form.needs-validation").on('submit', function (e) {
     form.addClass('was-validated');
 });
 
+export const onModalHidden = function () {
+    $(this).remove();
+};
 // Fonction pour initialiser un modal avec un formulaire
-export const openModalForm = (url, type = 'edit') => {
-    $.get(url, {}, function (form) {    
-        let modal = createModal();
-        $("body").append(modal);
-        modal.find('.modal-content').html(form);
+export const openModalForm = (url, type = 'edit', cb = () => { }) => {
+    return new Promise((resolve, reject) => {
+        $.get(url)
+            .done(function (form) {
+                let modal = createModal();
+                $("body").append(modal);
+                modal.find('.modal-content').html(form);
 
-        if (type === 'see') {
-            disableForm(modal);
-        }
+                if (type === 'see') {
+                    disableForm(modal);
+                }
 
-        let bsModal = new bootstrap.Modal(modal.get(0));
+                const bsModal = new bootstrap.Modal(modal.get(0));
 
-        modal.get(0).addEventListener('hidden.bs.modal', function () {
-            modal.remove();
-        });
-        
-        bsModal.show();
-        
-        initSelect2(modal.find(".select2"));
-        initTooltip();
-        handleFormSubmission(modal, url, bsModal);
-        // file input previews
-        modal.find("[data-ajax-preview]").each(function () {
-            const input = $("#" + $(this).data('ajax-preview'));
-            if(input.length > 0) {
-                const preview = $(this);
-                input.on('change', function (e) {
-                    if(e.target.files.length > 0) {
-                        const file = e.target.files[0];
-                        const reader = new FileReader();
-                        reader.onload = function (e) {
-                            if(preview.is('img')) {
-                                preview.attr('src', e.target.result);
-                            } else {
-                                preview.css('background-image', 'url(' + e.target.result + ')');
+                modal.get(0).addEventListener('hidden.bs.modal', onModalHidden);
+
+                bsModal.show();
+
+                initSelect2(modal.find(".select2"));
+                initTooltip();
+                handleFormSubmission(modal, url, bsModal, cb);
+
+                // file input previews
+                modal.find("[data-ajax-preview]").each(function () {
+                    const input = $("#" + $(this).data('ajax-preview'));
+                    if (input.length > 0) {
+                        const preview = $(this);
+                        input.on('change', function (e) {
+                            if (e.target.files.length > 0) {
+                                const file = e.target.files[0];
+                                const reader = new FileReader();
+                                reader.onload = function (e) {
+                                    if (preview.is('img')) {
+                                        preview.attr('src', e.target.result);
+                                    } else {
+                                        preview.css('background-image', 'url(' + e.target.result + ')');
+                                    }
+                                };
+                                reader.readAsDataURL(file);
                             }
-                        };
-                        reader.readAsDataURL(file);
-                        
+                        });
                     }
                 });
-            }
-        })
+
+                resolve(bsModal);
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                reject(new Error(`Erreur lors du chargement du formulaire : ${textStatus}`));
+            });
     });
 };
 
@@ -66,9 +75,9 @@ export const openModalForm = (url, type = 'edit') => {
 // Fonction pour créer un modal
 const createModal = () => {
     return $(`
-        <div class="modal fade" tabindex="-1">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content border-0">
+        <div class="modal fade" tabindex="-1" id="${Date.now()}">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content border-0 overflow-auto">
                 </div>
             </div>
         </div>
@@ -77,18 +86,19 @@ const createModal = () => {
 
 
 // Fonction pour gérer la soumission d'un formulaire en Ajax
-const handleFormSubmission = (modal, url, bsModal) => {
+const handleFormSubmission = (modal, url, bsModal, cb = () => { }) => {
     modal.find('form').off('submit').on('submit', function (e) {
-        handleAjaxForm($(this), e, url, () => {
+        handleAjaxForm($(this), e, url, (res) => {
             initDatatable();
             if (bsModal) bsModal.hide();
             $('[data-ajax-reload]').trigger('click');
+            if (cb) cb(res);
         });
     });
 };
 
 // Fonction pour traiter les formulaires en Ajax
-export const handleAjaxForm = (form, e, url, onSuccess = () => {}, onError = () => {}) => {
+export const handleAjaxForm = (form, e, url, onSuccess = () => { }, onError = () => { }) => {
     const formEl = form[0];
     if (!formEl.checkValidity()) {
         e.preventDefault();
@@ -177,7 +187,7 @@ $(document).on('click', '.openForm', function () {
     openModalForm(url, type);
 });
 
-$(document).on('submit', ".ajaxForm", function (e) {
+$(".ajaxForm").off('submit').on('submit', function (e) {
     let url = $(this).data('url');
     e.preventDefault();
     handleAjaxForm($(this), e, url);
@@ -190,27 +200,47 @@ $(document).on('click', '[data-redirect]', function () {
 
 $(document).on('click', '[data-ajax-post]', function () {
     let url = $(this).data('ajax-post');
-    $.post(url, {});
+    const form = $("#" + $(this).data('ajax-form'));
+    let formData = null
+    if ($(this).data('ajax-form') && form.length > 0) {
+        if (form.length > 0) {
+            formData = new FormData(form[0]);
+        }
+    }
+
+    $.ajax({
+        url: url,
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            handleAjaxSuccess(response, () => { });
+        },
+        error: function (xhr) {
+            handleAjaxError(form, xhr, () => { });
+        },
+    });
 });
 
 // file input previews
 $("[data-ajax-preview]").each(function () {
     const input = $("#" + $(this).data('ajax-preview'));
-    if(input.length > 0) {
+    if (input.length > 0) {
         const preview = $(this);
         input.on('change', function (e) {
-            if(e.target.files.length > 0) {
+            if (e.target.files.length > 0) {
                 const file = e.target.files[0];
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    if(preview.is('img')) {
+                    if (preview.is('img')) {
                         preview.attr('src', e.target.result);
                     } else {
                         preview.css('background-image', 'url(' + e.target.result + ')');
                     }
                 };
                 reader.readAsDataURL(file);
-                
+
             }
         });
     }

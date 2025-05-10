@@ -52,13 +52,6 @@ class UserType extends AbstractType
             ->add('lastname', TextType::class, [
                 'label' => 'Nom'
             ])
-            ->add('role_asso', TextType::class, [
-                'label' => 'Role dans l\'association'
-            ])
-            ->add('description', TextareaType::class, [
-                'label' => 'Description',
-                'required' => false,
-            ])
             ->add('address', TextType::class, [
                 'label' => 'Adresse'
             ])
@@ -106,11 +99,6 @@ class UserType extends AbstractType
             if (!$createdAt) {
                 $user->setCreatedAt(new \DateTimeImmutable());
             }
-
-            $showAboutPage = $user->isShowAboutPage();
-            if (!$showAboutPage) {
-                $user->setShowAboutPage(false);
-            }
         });
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
@@ -129,7 +117,7 @@ class UserType extends AbstractType
 
             // Si les mots de passe ne correspondent pas, ajouter une erreur
             if ($password !== $confirmPassword) {
-                // Ajouter l'erreur à la deuxième ou première partie du champ RepeatedType
+                // Ajouter l'erreur à la deuxièFme ou première partie du champ RepeatedType
                 $form->get('password')->get('second')->addError(new FormError('Les mots de passe ne correspondent pas.'));
             } else {
                 // Hachage du mot de passe si tout est correct

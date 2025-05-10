@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const Encore = require('@symfony/webpack-encore');
-const path = Encore.isProduction() ? '/build/' : '/biozh/hpln/public/build/';
+const path = Encore.isProduction() ? '/build/' : '/biozh/socle/public/build/';
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -26,7 +26,6 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
-    .addEntry('hpln', './assets/hpln/main.jsx')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

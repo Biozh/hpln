@@ -1,0 +1,140 @@
+[data-bs-theme="light"] {
+    .bg-body-reverse {
+        background-color: $primary !important;
+        color: $secondary !important;
+        border: none;
+        padding: .5em 1em;
+
+        .text-body {
+            color: $secondary !important;
+        }
+    }
+
+    .btn-body {
+        background-color: $primary !important;
+        color: $secondary !important;
+        border: none;
+        padding: .5em 1em;
+    }
+
+    .text-body {
+        color: $primary !important;
+    }
+
+    .bg-body-reverse {
+        background-color: $primary !important;
+        color: $secondary !important;
+    }
+
+    .text-body-reverse {
+        color: $primary !important;
+    }
+}
+
+[data-bs-theme="dark"] {
+    .bg-body-reverse {
+        background-color: $secondary !important;
+        color: $primary !important;
+        border: none;
+        padding: .5em 1em;
+
+        .text-body {
+            color: $primary !important;
+        }
+    }
+
+    .btn-body {
+        background-color: $secondary !important;
+        color: $primary;
+        border: none;
+        padding: .5em 1em;
+    }
+
+    .border-body {
+        background-color: $secondary !important;
+        color: $primary;
+    }
+
+    .text-body {
+        color: $secondary !important;
+    }
+
+    .bg-body-reverse {
+        background-color: $secondary !important;
+        color: $primary !important;
+    }
+
+    .text-body-reverse {
+        color: $secondary !important;
+    }
+}
+
+.project-picture {
+    height: 60vh;
+}
+
+@include media-breakpoint-down(lg) {
+    .project-picture {
+        height: 30vh;
+    }
+}
+
+// fix swiper fade
+#slider-description swiper-slide {
+    opacity: 1 !important;
+    transition: opacity .5s ease .5s !important;
+
+    &:not(.swiper-slide-active) {
+        opacity: 0 !important;
+        transition: opacity .5s ease !important;
+    }
+}
+
+.content {
+    min-height: calc(100dvh - 74.76px);
+    padding-top: 74.76px;
+    overflow-y: auto;
+}
+
+.anchor {
+    position: relative;
+    top: 81px;
+}
+
+.section {
+    min-height: calc(100dvh - 74.76px);
+    margin: 0 auto;
+}
+
+@include media-breakpoint-down(lg) {
+    .content {
+        min-height: calc(100dvh - 66px);
+        padding-top: 66px;
+    }
+
+    .section {
+        min-height: calc(100dvh - 66px);
+        margin: 0 auto;
+    }
+}
+
+/* scroll-snap */
+.section-container {
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+    height: calc(100dvh - 75px);
+}
+
+.section {
+    // scroll-snap-align: start;
+}
+
+.slider-description-container {
+    transition: all .5s ease;
+    overflow: hidden;
+}
+
+video {
+    transition: all .5s ease;
+    object-fit: cover;
+}

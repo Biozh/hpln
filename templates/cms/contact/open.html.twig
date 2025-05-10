@@ -1,0 +1,31 @@
+<div class="card bg-body">
+	<div class="card-header bg-body">
+		<div class="d-flex align-items-center justify-content-between">
+			<h4 class="card-head mb-0">Détail du message</h4>
+			<div class="flex-between">
+				<div role="button" class="text-decoration-none flex-center" type="buton" data-bs-dismiss="modal" data-bs-toggle="tooltip" data-bs-title="Fermer" data-bs-placement="bottom">
+					<span class="material-symbols-rounded fs-6">close</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card-body bg-body p-0">
+	<div class="h-100">
+		<iframe srcdoc="{{iframeContent}}" onload="resizeIframe(this)" style="display: block; width: 100%; height: 0"></iframe>
+	</div>
+	</div>
+</div>
+
+
+<script>
+  function resizeIframe(iframe) {
+    try {
+	  setTimeout(() => {
+		const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+		iframe.style.height = innerDoc.body.scrollHeight + 'px';
+	  }, 500)
+    } catch (e) {
+      console.error('Impossible de redimensionner l\'iframe : contenu cross-domain ?');
+    }
+  }
+</script>

@@ -6,7 +6,7 @@ services:
     environment:
       APP_ENV: prod
       APP_DEBUG: 0
-      DATABASE_URL: "mysql://${APP_NAME}:${DATABASE_PASSWORD}@${APP_NAME}-db:3306/${APP_NAME}_prod?serverVersion=10.6"
+      DATABASE_URL: "mysql://${APP_NAME}:${DATABASE_PASSWORD}@mysql:3306/${APP_NAME}_prod?serverVersion=10.6"
     networks:
       - web
     labels:
@@ -19,37 +19,7 @@ services:
     volumes:
       - biozh-uploads:/var/www/html/public/uploads
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: ${APP_NAME}-phpmyadmin
-    restart: unless-stopped
-    environment:
-      PMA_HOST: ${APP_NAME}-db
-    networks:
-      - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.${APP_NAME}-phpmyadmin.rule=Host(`phpmyadmin.${APP_DOMAIN}`)"
-      - "traefik.http.routers.${APP_NAME}-phpmyadmin.entrypoints=websecure"
-      - "traefik.http.routers.${APP_NAME}-phpmyadmin.tls=true"
-      - "traefik.http.routers.${APP_NAME}-phpmyadmin.tls.certresolver=myresolver"
-      - "traefik.http.services.${APP_NAME}-phpmyadmin.loadbalancer.server.port=80"
-
-  db:
-    image: mariadb:10.6
-    container_name: ${APP_NAME}-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ${APP_NAME}_prod
-      MYSQL_USER: ${APP_NAME}
-      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
-    volumes:
-      - biozh-dbdata:/var/lib/mysql
-    networks:
-      - web
-
 volumes:
-  biozh-dbdata:
   biozh-uploads:
 
 

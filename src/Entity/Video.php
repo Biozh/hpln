@@ -30,18 +30,6 @@ class Video
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['video:read'])]
     private ?string $description = null;
-    
-    #[Ignore]
-    #[Vich\UploadableField(mapping: 'videos', fileNameProperty: 'pictureName', originalName: 'pictureOriginalName')]
-    private ?File $picture = null;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(['video:read'])]
-    private ?string $pictureName = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?string $pictureOriginalName = null;
-
 
     #[ORM\Column(nullable: false)]
     #[Groups(['video:read'])]
@@ -98,61 +86,6 @@ class Video
 
         return $this;
     }
-    
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        $this->picture = null;
-        // $this->plainPassword = null;
-    }
-
-    /**
-     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
-     * of 'UploadedFile' is injected into this setter to trigger the update. If this
-     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
-     * must be able to accept an instance of 'File' as the bundle will inject one here
-     * during Doctrine hydration.
-     *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $picture
-     */
-    public function setPicture(?File $picture = null): void
-    {
-        $this->picture = $picture;
-        if (null !== $picture) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->updatedAt = new \DateTimeImmutable();
-        }
-    }
-
-    public function getPicture(): ?File
-    {
-        return $this->picture;
-    }
-
-    public function setPictureName(?string $pictureName): void
-    {
-        $this->pictureName = $pictureName;
-    }
-
-    public function getPictureName(): ?string
-    {
-        return $this->pictureName;
-    }
-
-    public function setPictureOriginalName(?string $pictureOriginalName): void
-    {
-        $this->pictureOriginalName = $pictureOriginalName;
-    }
-
-    public function getPictureOriginalName(): ?string
-    {
-        return $this->pictureOriginalName;
-    }
-
 
     public function getUrl(): ?string
     {
@@ -189,7 +122,7 @@ class Video
 
         return $this;
     }
-    
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -225,5 +158,4 @@ class Video
 
         return $this;
     }
-
 }

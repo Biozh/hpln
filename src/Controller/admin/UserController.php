@@ -20,11 +20,11 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/utilisateurs')]
-#[IsGranted('ROLE_ADMIN')]
 final class UserController extends AbstractController
 {
     public function __construct(private EntityManagerInterface $em) {}
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/', name: 'admin_user_index', methods: ['GET'])]
     public function index(Request $request, Datatable $datatable): Response
     {
@@ -119,8 +119,15 @@ final class UserController extends AbstractController
     public function new(User $user = null, Request $request, TokenStorageInterface $tokenStorage): Response
     {
         $user = $user ?? new User();
+
+        // Check if the user is granted ROLE_ADMIN or if the user is the same as the logged-in user
+        if (!$this->isGranted('ROLE_ADMIN') && $user !== $this->getUser()) {
+            throw $this->createAccessDeniedException("Vous n'avez pas le droit d'accéder à ce formulaire.");
+        }
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($user);
@@ -146,7 +153,7 @@ final class UserController extends AbstractController
                 return $this->json([
                     'success' => true,
                     'message' => $message,
-                    'redirect' => $this->generateUrl('admin_user_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'redirect' => $request->headers->get('referer')
                 ]);
             }
 
@@ -192,6 +199,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/supprimer/{id}', name: 'admin_user_delete', methods: ['GET', 'POST'])]
     public function delete(User $user, Request $request, EntityManagerInterface $entityManager): Response
     {

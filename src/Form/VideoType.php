@@ -39,15 +39,6 @@ class VideoType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('picture', VichImageType::class, [
-                'label' => "Photo de couverture",
-                'delete_label' => "Supprimer",
-                'required' => $options['data']->getPictureName() ? false : true,
-                'allow_delete' => false,
-                'download_uri' => false,
-                'image_uri' => false,
-                'asset_helper' => true,
-            ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => true,

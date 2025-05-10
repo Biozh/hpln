@@ -338,6 +338,7 @@ $headings-font-weight: 700;
     margin-bottom: 0 !important;
 }
 
+.select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field:focus,
 .select2-container--bootstrap-5.select2-container--focus .select2-selection,
 .select2-container--bootstrap-5.select2-container--open .select2-selection {
     // box-shadow: 0 0 0 0.25rem rgba(106, 163, 102, 0.25);

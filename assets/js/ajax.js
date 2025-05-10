@@ -16,7 +16,9 @@ $("form.needs-validation").on('submit', function (e) {
 });
 
 export const onModalHidden = function () {
+    console.log("removing ", $(this))
     $(this).remove();
+    console.log("deleted");
 };
 // Fonction pour initialiser un modal avec un formulaire
 export const openModalForm = (url, type = 'edit', cb = () => { }) => {
@@ -188,6 +190,7 @@ $(document).on('click', '.openForm', function () {
 });
 
 $(".ajaxForm").off('submit').on('submit', function (e) {
+    console.log("sub")
     let url = $(this).data('url');
     e.preventDefault();
     handleAjaxForm($(this), e, url);

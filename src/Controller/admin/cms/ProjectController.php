@@ -24,6 +24,8 @@ final class ProjectController extends AbstractController
     #[Route('/', name: 'admin_cms_projects_index', methods: ['GET'])]
     public function index(Request $request, Datatable $datatable): Response
     {
+        $em = $this->em;
+
         // datatable columns
         $columns = [
             [
@@ -40,6 +42,10 @@ final class ProjectController extends AbstractController
                 'sort' => true,
                 'search' => false,
                 'filter' => true,
+                'type' => 'select',
+                'choices' => [
+                    '' => '',
+                ],
                 'selector' => 'vc.name',
                 'table' => 'video_category',
             ],
@@ -52,6 +58,12 @@ final class ProjectController extends AbstractController
                 'selector' => '',
             ]
         ];
+
+
+        $categories = $em->getRepository(VideoCategory::class)->findAll();
+        foreach ($categories as $category) {
+            $columns[1]["choices"][$category->getSlug()] = $category->getName();
+        }
 
         // datatable datas request
         if ($request->query->get("draw")) {

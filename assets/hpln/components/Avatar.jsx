@@ -16,7 +16,9 @@ export default function Avatar({ user, tooltip = true }) {
                 {user.pictureName ? <>
                     <img src={`${APP_ASSETS_URL}uploads/avatars/${user.pictureName}`} alt="Avatar" className="rounded-circle cover bg-secondary" width={64} height={64} />
                 </> : <>
-                    <div className="rounded-circle bg-body-secondary" style={{ width: 64, height: 64 }}></div>
+                    <div className="rounded-circle bg-body-secondary d-flex align-items-center justify-content-center" style={{ width: 64, height: 64 }}>
+                        {user.firstname.charAt(0) + user.lastname.charAt(0)}
+                    </div>
                 </>}
             </div>
         </div>

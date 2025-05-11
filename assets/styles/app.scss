@@ -1,5 +1,5 @@
 // Custom.scss
-// Option B: Include parts of Bootstrap
+@import "../fonts/fonts.scss";
 
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
 @import "../../node_modules/bootstrap/scss/functions";
@@ -94,16 +94,6 @@ $headings-font-weight: 700;
     background-size: cover;
     object-position: center;
     object-fit: cover;
-}
-
-
-.material-symbols-rounded {
-    font-family: "Material Symbols Rounded";
-    font-variation-settings:
-        'FILL' 1,
-        'wght' 400,
-        'GRAD' 0,
-        'opsz' 24;
 }
 
 .flex-center {

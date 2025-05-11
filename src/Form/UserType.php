@@ -78,18 +78,8 @@ class UserType extends AbstractType
         $currentUser = $this->security->getUser();
         $targetUser = $builder->getData();
 
-        $isSelf = $currentUser instanceof User && $currentUser->getId() === $targetUser->getId();
-        $isSuperior = $this->roleComparator->isSuperior($currentUser, $targetUser);
-        $isEqualOrSuperior = $this->roleComparator->isEqualOrSuperior($currentUser, $targetUser);
         $isSuperAdmin = in_array('ROLE_SUPER_ADMIN', $currentUser->getRoles(), true);
         $isAdmin = in_array('ROLE_ADMIN', $currentUser->getRoles(), true);
-
-        $canEditRoles = (
-            // on est super admin et on modifie soi-même
-            ($isSelf && $isSuperAdmin)
-            // ou on est au moins égal au niveau du target et ce n’est pas soi-même
-            || (!$isSelf && $isEqualOrSuperior)
-        );
 
         if ($isAdmin || $isSuperAdmin) {
             $roleChoices = [
@@ -121,9 +111,15 @@ class UserType extends AbstractType
             $form = $event->getForm();
             $user = $form->getData();
 
+            $user->setUpdatedAt(new \DateTimeImmutable());
+
             $createdAt = $user->getCreatedAt();
             if (!$createdAt) {
                 $user->setCreatedAt(new \DateTimeImmutable());
+            }
+
+            if (empty($user->getRoles())) {
+                $user->setRoles(['ROLE_USER']);
             }
         });
 

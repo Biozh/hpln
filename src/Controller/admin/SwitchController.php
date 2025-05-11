@@ -56,7 +56,7 @@ final class SwitchController extends AbstractController
                 'selector' => 'u.lastname',
             ],
             [
-                'title' => 'Roles',
+                'title' => 'Rôles',
                 'name' => 'roles',
                 'sort' => false,
                 'search' => true,

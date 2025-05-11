@@ -16,9 +16,11 @@
 				<div class="dropdown">
 					<a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-body" id="dropdown-profile" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
 						{% if app.user.pictureName %}
-							<img src="{{ asset('uploads/avatars/') ~ app.user.pictureName}}" alt="{{app.user.firstname}} {{app.user.lastname}}" width="48" height="48" class="rounded-circle cover">
+							<img src="{{ asset('uploads/avatars/') ~ app.user.pictureName}}" alt="{{app.user.firstname}} {{app.user.lastname}}" width="48" height="48" class="rounded-circle cover border border-light">
 						{% else %}
-							<div style="width: 30px; height: 30px" class="rounded-circle bg-body-secondary"></div>
+							<div style="width: 30px; height: 30px" class="p-3 fs-6 rounded-circle cover bg-light text-secondary flex-center border border-light">
+								{{app.user.firstname|first}}{{app.user.lastname|first}}
+							</div>
 						{% endif %}
 						<span class="mx-3 d-none d-lg-block fw-bold">{{app.user.firstname}} {{app.user.lastname}}</span>
 					</a>

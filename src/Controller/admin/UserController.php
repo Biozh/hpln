@@ -5,6 +5,7 @@ namespace App\Controller\admin;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Service\Datatable;
+use App\Service\UserRoleComparator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -22,7 +23,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/admin/utilisateurs')]
 final class UserController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $em) {}
+    public function __construct(private EntityManagerInterface $em, private UserRoleComparator $roleComparator) {}
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/', name: 'admin_user_index', methods: ['GET'])]
@@ -80,19 +81,28 @@ final class UserController extends AbstractController
             WHERE u.id > 0 ";
 
             $records = $datatable->getScriptTable($sql, $columns, $this->em, "GROUP BY u.id");
-            foreach ($records['results'] as $i => $result) {
+            $currentUser = $this->getUser();
 
+            foreach ($records['results'] as $i => $result) {
                 $avatarDir = $this->generateUrl('front_index') . 'uploads/avatars/' . $result["picture_name"];
-                if ($result["picture_name"] !== null) {
-                    $avatar = "<div class='rounded-circle p-3 bg-body-secondary cover' style='width: 32px; height: 32px; background-image: url(" . $avatarDir . ");'></div>";
-                } else {
-                    $avatar = "<div class='rounded-circle p-3 bg-body-secondary cover' style='width: 32px; height: 32px;'></div>";
-                }
+                $avatar = "<div class='rounded-circle p-3 bg-body-secondary cover' style='width: 32px; height: 32px;" .
+                    ($result["picture_name"] !== null ? " background-image: url($avatarDir);" : '') .
+                    "'></div>";
+
+                // On doit construire un faux user pour comparer les rôles
+                $targetUser = (new User())
+                    ->setEmail($result['email'])
+                    ->setRoles(json_decode($result['roles'], true) ?? []);
 
                 $actions = '<div class="md-btn-group d-flex align-items-center justify-content-end">';
                 $actions .= '<button data-url="' . $this->generateUrl('admin_user_form', ['id' => $result['id']]) . '" data-type="see" class="btn btn-sm btn-secondary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Consulter"><span class="material-symbols-rounded fs-6">visibility</span></button>';
-                $actions .= '<button data-url="' . $this->generateUrl('admin_user_form', ['id' => $result['id']]) . '" data-type="edit" class="btn btn-sm btn-primary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Modifier"><span class="material-symbols-rounded fs-6">edit</span></button>';
-                $actions .= '<button data-url="' . $this->generateUrl('admin_user_delete', ['id' => $result['id']]) . '" data-type="delete" class="btn btn-sm btn-dark flex-center openForm" data-bs-toggle="tooltip" data-bs-title="Supprimer"><span class="material-symbols-rounded fs-6">delete</span></button>';
+
+                $isSelf = $currentUser instanceof User && $currentUser->getEmail() === $result['email'];
+                if ($this->roleComparator->isEqualOrSuperior($currentUser, $targetUser) || $isSelf) {
+                    $actions .= '<button data-url="' . $this->generateUrl('admin_user_form', ['id' => $result['id']]) . '" data-type="edit" class="btn btn-sm btn-primary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Modifier"><span class="material-symbols-rounded fs-6">edit</span></button>';
+                    $actions .= '<button data-url="' . $this->generateUrl('admin_user_delete', ['id' => $result['id']]) . '" data-type="delete" class="btn btn-sm btn-dark flex-center openForm" data-bs-toggle="tooltip" data-bs-title="Supprimer"><span class="material-symbols-rounded fs-6">delete</span></button>';
+                }
+
                 $actions .= '</div>';
 
                 $row = [
@@ -105,6 +115,7 @@ final class UserController extends AbstractController
 
                 $records["aaData"][$i] = $row;
             }
+
 
 
             return new response(json_encode($records));
@@ -128,6 +139,13 @@ final class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
+        $user = $user ?? new User();
+        $currentUser = $this->getUser();
+
+        // ⛔ Sécurité : on bloque si l'utilisateur n'est ni lui-même ni supérieur hiérarchiquement
+        if ($user->getId() !== null && !$this->roleComparator->isEqualOrSuperior($currentUser, $user)) {
+            throw $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier cet utilisateur.");
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($user);
@@ -203,6 +221,15 @@ final class UserController extends AbstractController
     #[Route('/supprimer/{id}', name: 'admin_user_delete', methods: ['GET', 'POST'])]
     public function delete(User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $currentUser = $this->getUser();
+
+        $isSelf = $currentUser instanceof User && $currentUser->getId() === $user->getId();
+        $isSuperior = $this->roleComparator->isSuperior($currentUser, $user);
+
+        if (!$isSuperior && !$isSelf) {
+            throw $this->createAccessDeniedException("Vous n'avez pas l'autorisation de supprimer cet utilisateur.");
+        }
+
         $token = $request->getPayload()->getString('_token');
 
         if ($token) {

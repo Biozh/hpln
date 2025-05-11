@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Service\UserRoleComparator;
 use Doctrine\ORM\EntityManagerInterface;
 use PharIo\Manifest\Email;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -29,6 +30,7 @@ class UserType extends AbstractType
         private UserPasswordHasherInterface $passwordHasher,
         private EntityManagerInterface $em,
         private Security $security,
+        private UserRoleComparator $roleComparator
     ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -79,21 +81,41 @@ class UserType extends AbstractType
             ])
         ;
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        // roles management
+        $currentUser = $this->security->getUser();
+        $targetUser = $builder->getData();
+
+        $isSelf = $currentUser instanceof User && $currentUser->getId() === $targetUser->getId();
+        $isSuperior = $this->roleComparator->isSuperior($currentUser, $targetUser);
+        $isEqualOrSuperior = $this->roleComparator->isEqualOrSuperior($currentUser, $targetUser);
+        $isSuperAdmin = in_array('ROLE_SUPER_ADMIN', $currentUser->getRoles(), true);
+
+        // ✅ Condition : peut modifier si...
+        $canEditRoles = (
+            // on est super admin et on modifie soi-même
+            ($isSelf && $isSuperAdmin)
+            // ou on est au moins égal au niveau du target et ce n’est pas soi-même
+            || (!$isSelf && $isEqualOrSuperior)
+        );
+
+        if ($canEditRoles) {
+            $roleChoices = [
+                'Utilisateur' => 'ROLE_USER',
+                'Administrateur' => 'ROLE_ADMIN',
+                'Administrateur Biozh' => 'ROLE_SUPER_ADMIN',
+            ];
+
+            // Seuls les super admins peuvent attribuer le rôle switch (à eux-mêmes ou autres)
+            if ($isSuperAdmin) {
+                $roleChoices['Switch'] = 'ROLE_ALLOWED_TO_SWITCH';
+            }
+
             $builder->add('roles', ChoiceType::class, [
                 'label' => 'Rôles',
-                'required' => true,
-                'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Administrateur' => 'ROLE_ADMIN',
-                    'Switch' => 'ROLE_ALLOWED_TO_SWITCH',
-                ],
-                'attr' => [
-                    'class' => 'select2',
-                    'required' => false
-                ],
+                'choices' => $roleChoices,
                 'multiple' => true,
                 'expanded' => false,
+                'attr' => ['class' => 'select2']
             ]);
         }
 

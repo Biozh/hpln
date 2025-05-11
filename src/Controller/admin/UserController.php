@@ -136,12 +136,14 @@ final class UserController extends AbstractController
         $user = $user ?? new User();
         $currentUser = $this->getUser();
 
-        // ⛔ Sécurité : on bloque si l'utilisateur n'est ni lui-même ni supérieur hiérarchiquement
-        if ($user->getId() !== null && !$this->roleComparator->isEqualOrSuperior($currentUser, $user)) {
-            throw $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier cet utilisateur.");
-        }
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // ⛔ Sécurité : on bloque si l'utilisateur n'est ni lui-même ni supérieur hiérarchiquement
+            if ($user->getId() !== null && !$this->roleComparator->isEqualOrSuperior($currentUser, $user)) {
+                throw $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier cet utilisateur.");
+            }
+
             $this->em->persist($user);
             $this->em->flush();
 

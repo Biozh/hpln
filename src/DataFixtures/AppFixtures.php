@@ -28,7 +28,6 @@ class AppFixtures extends Fixture
         $user->setAddress('1 rue de la Paix');
         $user->setCity('Paris');
         $user->setZip('75000');
-        $user->setTheme($faker->randomElement(['dark', 'light']));
         $user->setCreatedAt(new \DateTimeImmutable());
         $user->setRoles(['ROLE_USER', 'ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH']);
         $user->setPassword($this->passwordHasher->hashPassword($user, 'aze'));
@@ -39,21 +38,20 @@ class AppFixtures extends Fixture
         $users = [];
         for ($i = 0; $i < $nb_users; $i++) {
             $users[$i] = new User();
-            
+
             $users[$i]->setEmail($faker->email);
             $users[$i]->setFirstname($faker->firstName);
             $users[$i]->setLastname($faker->lastName);
             $users[$i]->setAddress($faker->address);
             $users[$i]->setCity($faker->city);
             $users[$i]->setZip($faker->postcode);
-            $users[$i]->setTheme('dark');
             $users[$i]->setCreatedAt(new \DateTimeImmutable($faker->dateTimeBetween('-6 months', 'now')->format('Y-m-d H:i:s')));
             $users[$i]->setRoles(['ROLE_USER']);
             $users[$i]->setPassword($this->passwordHasher->hashPassword($users[$i], $faker->password));
 
             $manager->persist($users[$i]);
         }
-        
+
         $manager->flush();
     }
 }

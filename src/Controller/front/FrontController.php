@@ -18,6 +18,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Mime\Address;
 
 #[Route('/')]
 class FrontController extends AbstractController
@@ -49,9 +50,14 @@ class FrontController extends AbstractController
     {
         $datas = json_decode($request->getContent(), true);
 
+        $adminEmails = array_map(
+            fn(User $admin) => $admin->getEmail(),
+            $this->em->getRepository(User::class)->findByRole("ROLE_ADMIN")
+        );
+
         $resetEmail = (new Email())
             ->from($this->params->get('MAILER_NAME'))
-            ->to($this->params->get('MAILER_NAME'))
+            ->to(...$adminEmails)
             ->subject('Demande de contact')
             ->html($this->renderView('email/contact.html.twig', ['datas' => $datas]));
         $mailer->send($resetEmail);

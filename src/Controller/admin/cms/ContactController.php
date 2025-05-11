@@ -25,7 +25,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/cms/contact')]
-#[IsGranted('ROLE_ADMIN')]
 final class ContactController extends AbstractController
 {
     public function __construct(private EntityManagerInterface $em) {}
@@ -88,6 +87,7 @@ final class ContactController extends AbstractController
             foreach ($records['results'] as $i => $result) {
                 $actions = '<div class="md-btn-group d-flex align-items-center justify-content-end">';
                 $actions .= '<button data-url="' . $this->generateUrl('admin_cms_contact_open', ['id' => $result['id']]) . '" data-type="see" class="btn btn-sm btn-secondary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Consulter"><span class="material-symbols-rounded fs-6">mail</span></button>';
+                $actions .= '<button data-url="' . $this->generateUrl('admin_cms_contact_delete', ['id' => $result['id']]) . '" data-type="delete" class="btn btn-sm btn-dark flex-center openForm" data-bs-toggle="tooltip" data-bs-title="Supprimer"><span class="material-symbols-rounded fs-6">delete</span></button>';
                 $actions .= '</div>';
 
                 $date = new \DateTime($result['created_at']);
@@ -243,6 +243,7 @@ final class ContactController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/sauvegarder-descriptions', name: 'admin_cms_contact_save_descriptions', methods: ['POST'])]
     public function saveDescriptions(Request $request): Response
     {
@@ -271,22 +272,21 @@ final class ContactController extends AbstractController
     }
 
     #[Route('/supprimer/{id}', name: 'admin_cms_contact_delete', methods: ['GET', 'POST'])]
-    public function delete(User $user, Request $request): Response
+    public function delete(CMSContact $email, Request $request): Response
     {
         $token = $request->getPayload()->getString('_token');
 
         if ($token) {
-            if ($this->isCsrfTokenValid('delete' . $user->getId(), $token)) {
-                $user->setShowAboutPage(false);
-                $this->em->persist($user);
+            if ($this->isCsrfTokenValid('delete' . $email->getId(), $token)) {
+                $this->em->remove($email);
                 $this->em->flush();
             }
 
-            return $this->json(['success' => true, 'message' => 'Membre retiré avec succès !']);
+            return $this->json(['success' => true, 'message' => 'Email supprimé avec succès !']);
         } else {
             return $this->render('cms/contact/_delete_form.html.twig', [
-                'user' => $user,
-                'message' => 'Êtes-vous sûr(e) de vouloir retirer ce membre ?',
+                'email' => $email,
+                'message' => 'Êtes-vous sûr(e) de vouloir retirer cet email ?',
             ]);
         }
     }

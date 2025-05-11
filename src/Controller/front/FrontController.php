@@ -77,16 +77,4 @@ class FrontController extends AbstractController
             "message" => "Message envoyé avec succès !",
         ]);
     }
-
-    #[Route('/_error', name: 'front_error')]
-    public function notFound(Request $request, Security $security): Response
-    {
-        $exception = $request->attributes->get('exception');
-
-        if (!$exception instanceof NotFoundHttpException) {
-            throw $exception; // on laisse passer les autres erreurs
-        }
-
-        return $this->redirectToRoute('front_index');
-    }
 }

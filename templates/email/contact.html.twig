@@ -10,9 +10,11 @@
 <b>Email: </b>{{ datas.email }}<br />
 <br />
 <b>Message: </b> <br />
-{{ datas.message }}
+{{ datas.message |raw|nl2br }}<br />
 
-<br /><br />
+<br />
+<hr />
+<br />
 Cordialement,<br />
 L'équipe {{PROJECT_NAME}}
 

@@ -142,7 +142,7 @@ export default function Contact() {
                     </div>
                 </div>
             </div>
-            <div id="errorToast" className="toast show align-items-center border border-2 border-body-reverse bg-body-reverse text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+            <div id="errorToast" className="toast align-items-center border border-2 border-body-reverse bg-body-reverse text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
                 <div className="d-flex">
                     <div className="toast-body">
                         Erreur lors de l'envoi du message !

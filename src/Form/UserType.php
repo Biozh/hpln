@@ -89,8 +89,8 @@ class UserType extends AbstractType
         $isSuperior = $this->roleComparator->isSuperior($currentUser, $targetUser);
         $isEqualOrSuperior = $this->roleComparator->isEqualOrSuperior($currentUser, $targetUser);
         $isSuperAdmin = in_array('ROLE_SUPER_ADMIN', $currentUser->getRoles(), true);
+        $isAdmin = in_array('ROLE_ADMIN', $currentUser->getRoles(), true);
 
-        // ✅ Condition : peut modifier si...
         $canEditRoles = (
             // on est super admin et on modifie soi-même
             ($isSelf && $isSuperAdmin)
@@ -98,15 +98,19 @@ class UserType extends AbstractType
             || (!$isSelf && $isEqualOrSuperior)
         );
 
-        if ($canEditRoles) {
+        if ($isAdmin || $isSuperAdmin) {
             $roleChoices = [
                 'Utilisateur' => 'ROLE_USER',
-                'Administrateur' => 'ROLE_ADMIN',
-                'Administrateur Biozh' => 'ROLE_SUPER_ADMIN',
             ];
 
-            // Seuls les super admins peuvent attribuer le rôle switch (à eux-mêmes ou autres)
+            // Seuls les admins peuvent attribuer le rôle admin
+            if ($isAdmin) {
+                $roleChoices['Administrateur'] = 'ROLE_ADMIN';
+            }
+
+            // Seuls les super admins peuvent attribuer le rôle switch et super admin
             if ($isSuperAdmin) {
+                $roleChoices['Administrateur Biozh'] = 'ROLE_SUPER_ADMIN';
                 $roleChoices['Switch'] = 'ROLE_ALLOWED_TO_SWITCH';
             }
 

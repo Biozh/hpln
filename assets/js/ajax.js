@@ -38,6 +38,7 @@ export const openModalForm = (url, type = 'edit', cb = () => { }) => {
                 modal.get(0).addEventListener('hidden.bs.modal', onModalHidden);
 
                 bsModal.show();
+                if (cb) cb();
 
                 initSelect2(modal.find(".select2"));
                 initTooltip();
@@ -184,13 +185,48 @@ const handleAjaxError = (form, xhr, onError) => {
 
 // Gestion des événements document
 $(document).on('click', '.openForm', function () {
-    // remove tooltips
-    $(".tooltip ").remove();
+    $(".tooltip").remove();
 
-    let url = $(this).data('url');
-    let type = $(this).data('type') ?? 'edit';
-    openModalForm(url, type);
+    const button = $(this);
+
+    // Empêche double clic
+    if (button.hasClass('loading')) return;
+
+    const originalContent = button.html();
+    const originalWidth = button.outerWidth();
+    const originalHeight = button.outerHeight();
+
+    // Appliquer taille fixe
+    button
+        .addClass('loading')
+        .prop('disabled', true)
+        .css({
+            position: 'relative',
+            width: originalWidth,
+            height: originalHeight,
+        });
+
+    // Masquer le contenu sans le retirer
+    button.html(`
+        <span class="btn-content" style="opacity: 0;">${originalContent}</span>
+        <div class="flex-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+            </span>
+        </div>
+    `);
+
+    const url = button.data('url');
+    const type = button.data('type') ?? 'edit';
+
+    openModalForm(url, type, () => {
+        button
+            .removeClass('loading')
+            .prop('disabled', false)
+            .css({ width: '', height: '' }) // on remet à l’état auto
+            .html(originalContent);
+    });
 });
+
 
 $(".ajaxForm").off('submit').on('submit', function (e) {
     console.log("sub")

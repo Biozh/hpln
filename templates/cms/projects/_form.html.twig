@@ -19,20 +19,6 @@
         </div>
 
         <div class="row">
-            <div class="col-xl-6">
-                <div class="mb-3">
-                    <div class="flex-between flex-column align-items-start">
-                        <div class="flex-grow-1">
-                            {{ form_widget(form.picture) }}
-                        </div>
-                        <label for="video_picture_file" data-ajax-preview="video_picture_file" class="btn p-3 bg-body-secondary form-control mt-2" style="width: 256px; height: 128px; background-size: 90%; background-position: center; background-repeat: no-repeat; {% if form.vars.value.pictureName %}background-image: url({{asset('uploads/videos/' ~ form.vars.value.pictureName)}});{% endif %}"></label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="row">
             <div class="col-md-12">
                 <div class="mb-3">
                     {{ form_label(form.description) }}

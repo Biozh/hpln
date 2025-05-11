@@ -1,0 +1,22 @@
+{% extends "email/blank.html.twig" %}
+
+{% block title %}
+	Nouvelle demande de contact
+{% endblock %}
+
+{% block content %}
+Bonjour,<br /><br />
+Vous avez une nouvelle demande de contact de la part de <br /><br /><br />
+
+<b>Nom: </b>{{ datas.lastname }}<br />
+<b>Prénom: </b>{{ datas.firstname }}<br />
+<b>Email: </b>{{ datas.email }}<br />
+<br />
+<b>Message: </b> <br />
+{{ datas.message }}
+
+<br /><br />
+Cordialement,<br />
+L'équipe {{PROJECT_NAME}}
+
+{% endblock %}

@@ -31,6 +31,14 @@
 				href: path('admin_index')}) 
 			}}
 
+			{{ include("admin/components/sidebar-item.html.twig", {
+				menu: menu is defined ? menu : null, 
+				icon: 'mark_email_unread', 
+				slug: "cms_contact",
+				name: "Demandes de contact", 
+				href: path('admin_cms_contact_index')}) 
+			}}
+
 			{% if is_granted("ROLE_ADMIN") or is_granted('IS_IMPERSONATOR') %}
 				<li class="nav-item mb-3 flex-grow-1 sidebar-separator">
 					<div class="px-1">
@@ -57,10 +65,6 @@
 								slug: "cms_about",
 								name: "L'association", 
 								href: path('admin_cms_about_index') 
-							},{
-								slug: "cms_contact",
-								name: "Nous contacter", 
-								href: path('admin_cms_contact_index') 
 							}
 						]}) 
 					}}

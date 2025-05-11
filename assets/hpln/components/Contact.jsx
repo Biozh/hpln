@@ -82,7 +82,7 @@ export default function Contact() {
                                 </Form.Group>
                                 <Col className="text-end">
                                     <button disabled={loading} type="submit" className="btn-body rounded-pill px-4">
-                                        {!loading ? "Envoyer" : <span class="ms-1 spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>}
+                                        {!loading ? "Envoyer" : <span className="ms-1 spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>}
                                     </button>
                                 </Col>
                             </Row>

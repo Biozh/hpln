@@ -1,9 +1,10 @@
 import { Toast } from "bootstrap";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 
 export default function Contact() {
     const [validated, setValidated] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
@@ -19,6 +20,7 @@ export default function Contact() {
 
         }
         if (form.checkValidity()) {
+            setLoading(true)
             fetch(APP_CONTACT_URL, {
                 method: "POST",
                 headers: {
@@ -32,6 +34,7 @@ export default function Contact() {
                 }),
             })
                 .then((response) => {
+                    setLoading(false)
                     if (response.ok) {
                         const toastEl = document.getElementById('successToast');
                         const toast = new Toast(toastEl);
@@ -58,7 +61,7 @@ export default function Contact() {
             <Container>
                 <Row>
                     <Col lg={7} className="mb-5 mb-lg-0">
-                        <h2 className="mb-3 mb-lg-5">Ecrivez-nous</h2>
+                        <h2 className="mb-3 mb-lg-5">Écrivez-nous</h2>
                         <Form noValidate className="needs-validation" onSubmit={handleSubmit}>
                             <Row>
                                 <Form.Group as={Col} xs={6} controlId="firstname">
@@ -78,7 +81,9 @@ export default function Contact() {
                                     <Form.Control as="textarea" required type="text" placeholder="Bonjour," rows="8" className="px-3 rounded-4 bg-transparent" />
                                 </Form.Group>
                                 <Col className="text-end">
-                                    <button type="submit" className="btn-body rounded-pill px-4">Envoyer</button>
+                                    <button disabled={loading} type="submit" className="btn-body rounded-pill px-4">
+                                        {!loading ? "Envoyer" : <span class="ms-1 spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>}
+                                    </button>
                                 </Col>
                             </Row>
                         </Form>

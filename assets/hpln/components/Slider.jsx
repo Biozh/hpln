@@ -93,6 +93,11 @@ export default function Slider() {
 
     const currentSlide = filteredSlides[slideIndex] || filteredSlides[0];
 
+    // filter categories to keep only categories that contains at least one video
+    const filteredCategories = APP_CATEGORIES.filter((category) =>
+        slides.some((slide) => slide.category.id === category.id)
+    );
+
     const setPlayer = (index, player) => {
         playerRefs.current[index] = player;
         playerReady.current[index] = true;
@@ -196,7 +201,7 @@ export default function Slider() {
                             value={selectedCategory}
                         >
                             <option value="all">Toutes les catégories</option>
-                            {APP_CATEGORIES.map((category, i) => (
+                            {filteredCategories.map((category, i) => (
                                 <option key={i} value={category.id}>
                                     {category.name}
                                 </option>

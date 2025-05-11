@@ -46,7 +46,7 @@ final class ProjectController extends AbstractController
                 'choices' => [
                     '' => '',
                 ],
-                'selector' => 'vc.name',
+                'selector' => 'vc.slug',
                 'table' => 'video_category',
             ],
             [

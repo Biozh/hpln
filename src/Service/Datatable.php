@@ -84,44 +84,6 @@ class Datatable
                     $params["searchValue_$columnIndex"] = "%$columnSearchValue%";
                 }
             }
-
-            if (!$targetColumnConfig) {
-                continue;
-            }
-
-            $selectorParts = explode(".", $sorts[$columnIndex]);
-            $columnName = end($selectorParts);
-            $columnTable = $targetColumnConfig['table'] ?? $tableName;
-
-            try {
-                $columnsMetadataTarget = $schemaManager->listTableColumns($columnTable);
-            } catch (\Throwable $e) {
-                continue; // ignore si la table n'existe pas (sécurité)
-            }
-
-            if (!isset($columnsMetadataTarget[$columnName])) {
-                continue;
-            }
-
-            $columnMetadata = $columnsMetadataTarget[$columnName];
-            $columnType = $columnMetadata->getType();
-
-            if ($columnType instanceof \Doctrine\DBAL\Types\JsonType) {
-                $sql .= " AND JSON_SEARCH(" . $sorts[$columnIndex] . ", 'one', '%" . $columnSearchValue . "%') IS NOT NULL";
-            } elseif ($columnType instanceof \Doctrine\DBAL\Types\DateTimeType) {
-                $date = \DateTime::createFromFormat('d/m/Y', $columnSearchValue);
-                if ($date) {
-                    $formattedDate = $date->format('Y-m-d');
-                    $sql .= " AND DATE_FORMAT(" . $sorts[$columnIndex] . ", '%Y-%m-%d') LIKE :searchValue_$columnIndex";
-                    $params["searchValue_$columnIndex"] = "%$formattedDate%";
-                } else {
-                    $sql .= " AND DATE_FORMAT(" . $sorts[$columnIndex] . ", '%d/%m/%Y') LIKE :searchValue_$columnIndex";
-                    $params["searchValue_$columnIndex"] = "%$columnSearchValue%";
-                }
-            } else {
-                $sql .= " AND " . $sorts[$columnIndex] . " LIKE :searchValue_$columnIndex";
-                $params["searchValue_$columnIndex"] = "%$columnSearchValue%";
-            }
         }
 
         // Recherche globale

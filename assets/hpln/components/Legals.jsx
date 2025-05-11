@@ -18,68 +18,119 @@ export default function Legals() {
                     </div>
                     <div className="modal-body text-start text-body-reverse">
 
-                        <h5>Préambule</h5>
-                        <p>
-                            Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l'économie numérique,
-                            il est précisé aux utilisateurs du site <strong>hpln.fr</strong> l'identité des différents intervenants dans le cadre
-                            de sa réalisation et de son suivi.
-                        </p>
 
-                        <h5>Édition du site</h5>
-                        <p>
-                            Le présent site, accessible à l'URL <a href="https://hpln.fr" target="_blank">https://hpln.fr</a> (le « Site »),
-                            est édité par :
-                        </p>
-                        <p>
-                            <strong>HPLN Association</strong>, enregistrée sous le numéro <strong>W353023363</strong> auprès de la Préfecture de
-                            Paris,<br />
-                            Siège : 54 avenue Ledru-Rollin, 75012 Paris<br />
-                            Représentée par Léon Scheinkmann, dûment habilité en qualité de Président.
-                        </p>
+                        <div className="container py-2">
+                            <h1 className="mb-4">Mentions légales</h1>
 
-                        <h5>Création et développement</h5>
-                        <p>
-                            Le site a été conçu, développé et est maintenu par la société <strong>Biozh</strong>, représentée par Arsène Bidan et
-                            Hector Bidan, développeurs web.
-                            Biozh agit en tant que prestataire technique pour le compte de l'association HPLN.
-                        </p>
+                            <section className="mb-3">
+                                <h2 className="h4">Préambule</h2>
+                                <p>
+                                    Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique,
+                                    et du Règlement Général sur la Protection des Données (RGPD), il est précisé aux utilisateurs du site hpln.fr
+                                    l'identité des différents intervenants dans le cadre de sa réalisation, de son suivi et du traitement des données personnelles.
+                                </p>
+                            </section>
 
-                        <h5>Webmaster</h5>
-                        <p>
-                            Le webmaster du site est la société <strong>Biozh</strong>.<br />
-                            Contact : <a href="mailto:support@biozh-studio.fr">support@biozh-studio.fr</a>
-                        </p>
+                            <section className="mb-3">
+                                <h2 className="h4">Édition du site</h2>
+                                <p>
+                                    Le présent site, accessible à l’URL <a href="https://hpln.fr">https://hpln.fr</a>, est édité par :
+                                </p>
+                                <ul>
+                                    <li>HPLN, association loi 1901, enregistrée sous le numéro W353023363 auprès de la Préfecture d’Ille-et-Vilaine</li>
+                                    <li>Siège social : 54 avenue Ledru-Rollin, 75012 Paris</li>
+                                    <li>Représentée par Léon Scheinkmann et Hippolyte Berthault, en qualité de co-présidents</li>
+                                </ul>
+                            </section>
 
-                        <h5>Hébergement</h5>
-                        <p>
-                            Le Site est hébergé par <strong>Hostinger International Ltd.</strong><br />
-                            Adresse : 61 Lordou Vironos Street, 6023 Larnaca, Chypre<br />
-                            Contact : <a href="https://www.hostinger.fr/contact" target="_blank">https://www.hostinger.fr/contact</a>
-                        </p>
+                            <section className="mb-3">
+                                <h2 className="h4">Création, développement et maintenance</h2>
+                                <p>
+                                    Le site a été conçu, développé et est maintenu par la société <strong>Biozh</strong>, représentée par Arsène Bidan et Hector Bidan, développeurs web.
+                                    Biozh agit en tant que prestataire technique et sous-traitant pour le compte de l’association HPLN.
+                                </p>
+                            </section>
 
-                        <h5>Directeur de publication</h5>
-                        <p>
-                            Le Directeur de la publication est <strong>Léon Scheinkmann</strong>, en qualité de Président de l'association HPLN.
-                        </p>
+                            <section className="mb-3">
+                                <h2 className="h4">Webmaster</h2>
+                                <p>
+                                    Le webmaster du site est la société <strong>Biozh</strong>.<br />
+                                    Contact : <a href="mailto:support@biozh-studio.fr">support@biozh-studio.fr</a>
+                                </p>
+                            </section>
 
-                        <h5>Nous contacter</h5>
-                        <p>
-                            Par téléphone : <a href="tel:+33781360101">+33 7 81 36 01 01</a><br />
-                            Par email : <a href="mailto:scheinkmannleon35000@gmail.com">scheinkmannleon35000@gmail.com</a><br />
-                            Par courrier : 54 avenue Ledru-Rollin, 75012 Paris
-                        </p>
+                            <section className="mb-3">
+                                <h2 className="h4">Hébergement</h2>
+                                <p>
+                                    Le site est hébergé par :<br />
+                                    Hostinger International Ltd<br />
+                                    61 Lordou Vironos Street, 6023 Larnaca, Chypre<br />
+                                    Contact : <a href="https://www.hostinger.fr/contact" target="_blank">hostinger.fr/contact</a>
+                                </p>
+                            </section>
 
-                        <h5>Données personnelles</h5>
-                        <p>
-                            L'association <strong>HPLN</strong> est responsable du traitement des données.
-                            La société <strong>Biozh</strong> intervient en tant que sous-traitant technique, avec un accès aux données uniquement
-                            dans le cadre de la maintenance et de l'hébergement du site.
-                        </p>
-                        <p>
-                            Les utilisateurs disposent d’un droit d’accès, de rectification, de suppression et d’opposition concernant leurs
-                            données personnelles,
-                            qu’ils peuvent exercer en contactant l’association aux coordonnées indiquées ci-dessus.
-                        </p>
+                            <section className="mb-3">
+                                <h2 className="h4">Directeurs de la publication</h2>
+                                <p>
+                                    Les Directeurs de la publication sont Léon Scheinkmann et Hippolyte Berthault, en qualité de co-présidents de l'association HPLN.
+                                </p>
+                            </section>
+
+                            <section className="mb-3">
+                                <h2 className="h4">Nous contacter</h2>
+                                <ul>
+                                    <li>Par téléphone : +33 7 81 36 01 01</li>
+                                    <li>Par email : <a href="mailto:hpln.leon.hippo@gmail.com">hpln.leon.hippo@gmail.com</a></li>
+                                    <li>Par courrier : 54 avenue Ledru-Rollin, 75012 Paris</li>
+                                </ul>
+                            </section>
+
+                            <section className="mb-3">
+                                <h2 className="h4">Données personnelles</h2>
+                                <p>
+                                    L’association HPLN est responsable du traitement des données personnelles collectées sur le site.
+                                    La société Biozh intervient en tant que sous-traitant, avec un accès limité aux données uniquement dans le cadre
+                                    de la maintenance technique et de l’hébergement du site.
+                                </p>
+                                <p>
+                                    Les données éventuellement recueillies via le formulaire de contact (nom, adresse email, message) sont utilisées
+                                    uniquement pour répondre aux sollicitations des utilisateurs. Elles ne sont ni cédées, ni vendues à des tiers.
+                                </p>
+                                <p>
+                                    La base légale du traitement est le consentement de l'utilisateur. Les données sont conservées jusqu’à 3 ans maximum,
+                                    sauf obligation légale ou intérêt justifié. Elles sont supprimées ou anonymisées lorsqu’elles ne sont plus nécessaires.
+                                </p>
+                                <p>
+                                    Conformément au RGPD, les utilisateurs disposent des droits suivants :
+                                </p>
+                                <ul>
+                                    <li>Droit d'accès, de rectification, d’effacement, de limitation et d’opposition</li>
+                                    <li>Droit de retirer leur consentement à tout moment</li>
+                                    <li>Droit d’introduire une réclamation auprès de la CNIL</li>
+                                </ul>
+                                <p>
+                                    Pour exercer ces droits, contactez-nous à l’adresse indiquée ci-dessus.
+                                </p>
+                            </section>
+
+                            <section className="mb-3">
+                                <h2 className="h4">Cookies</h2>
+                                <p>
+                                    Le site peut utiliser des cookies strictement nécessaires à son fonctionnement (cookies de session).
+                                    D’autres cookies (notamment pour la mesure d’audience) ne sont déposés qu’avec votre consentement, via une bannière
+                                    de gestion des cookies. Vous pouvez modifier vos préférences à tout moment.
+                                </p>
+                            </section>
+
+                            <section className="mb-3">
+                                <h2 className="h4">Propriété intellectuelle</h2>
+                                <p>
+                                    Tous les contenus présents sur le site (textes, images, vidéos, sons, graphismes, logos…) sont la propriété exclusive
+                                    de l'association HPLN, sauf mention contraire.<br />
+                                    Toute reproduction, distribution, modification ou utilisation sans autorisation écrite est strictement interdite.
+                                </p>
+                            </section>
+                        </div>
 
                     </div>
                 </div>

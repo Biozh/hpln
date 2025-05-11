@@ -181,7 +181,7 @@ export default function Slider() {
                                     )}
                                 </Col>
                                 <p
-                                    className="flex-center w-100"
+                                    className="flex-center w-100 mt-3"
                                     dangerouslySetInnerHTML={{ __html: currentSlide.description }}
                                     style={{ minHeight: "8vh" }}
                                 />
@@ -215,7 +215,7 @@ export default function Slider() {
                                 fadeEffect='{"crossFade": true}'
                             >
                                 {filteredSlides.map((video, i) => (
-                                    <swiper-slide key={video.id} class="mx-auto text-center">
+                                    <swiper-slide key={video.id} className="mx-auto text-center">
                                         <SlideVideo
                                             videoId={extractYouTubeID(video.url)}
                                             index={i}

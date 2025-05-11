@@ -25,9 +25,9 @@ export default function Avatar({ user, tooltip = true }) {
             <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div className="modal-content">
                     <div className="modal-header position-relative">
-                        <div class="d-flex flex-column w-100">
+                        <div className="d-flex flex-column w-100">
                             {user.pictureName &&
-                                <div class="flex-center w-100 mb-2">
+                                <div className="flex-center w-100 mb-2">
                                     <img src={`${APP_ASSETS_URL}uploads/avatars/${user.pictureName}`} alt="Avatar" className="rounded-circle cover bg-secondary" width={128} height={128} />
                                 </div>
                             }
@@ -37,7 +37,7 @@ export default function Avatar({ user, tooltip = true }) {
                                 <h6 className="modal-subtitle text-muted mb-0 fs-6">{user.email}</h6>
                             </div>
                         </div>
-                        <div class="position-absolute top-0 end-0 p-3">
+                        <div className="position-absolute top-0 end-0 p-3">
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                     </div>

@@ -48,7 +48,7 @@ export default function Footer() {
                     </Col>
                     <Col sm={12} md="auto" className=" d-flex align-items-center mt-3 mt-md-0 justify-content-center justify-content-md-end" >
                         <div className="d-flex align-items-center justify-content-end gap-5">
-                            <span data-bs-toggle="modal" data-bs-target="#legals" className="text-decoration-none text-body fs-6">Mentions légales</span>
+                            <a href="" data-bs-toggle="modal" data-bs-target="#legals" className="text-body fs-6">Mentions légales</a>
                         </div>
                     </Col>
                 </Row>

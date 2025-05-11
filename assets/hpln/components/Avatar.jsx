@@ -21,7 +21,7 @@ export default function Avatar({ user, tooltip = true }) {
             </div>
         </div>
 
-        <div className="modal text-start text-body-reverse" tabIndex="-1" id={"participant-" + user.id + id}>
+        <div className="modal text-start text-body-reverse" tabIndex="-1" style={{ zIndex: 2000 }} id={"participant-" + user.id + id}>
             <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div className="modal-content">
                     <div className="modal-header position-relative">

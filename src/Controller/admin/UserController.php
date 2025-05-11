@@ -87,7 +87,7 @@ final class UserController extends AbstractController
                 $avatarDir = $this->generateUrl('front_index') . 'uploads/avatars/' . $result["picture_name"];
                 $avatar = "<div class='rounded-circle p-3 bg-light cover text-secondary flex-center border border-light' style='width: 32px; height: 32px;" .
                     ($result["picture_name"] !== null ? " background-image: url($avatarDir);" : '') .
-                    "'>" . mb_substr($result["firstname"], 0, 1) . mb_substr($result["lastname"], 0, 1) . "</div>";
+                    "'>" . ($result["picture_name"] ? "" : (mb_substr($result["firstname"], 0, 1) . mb_substr($result["lastname"], 0, 1))) . "</div>";
 
                 // On doit construire un faux user pour comparer les rôles
                 $targetUser = (new User())

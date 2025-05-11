@@ -1,5 +1,5 @@
 // Custom.scss
-// Option B: Include parts of Bootstrap
+@import "../fonts/fonts.scss";
 
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
 @import "../../node_modules/bootstrap/scss/functions";
@@ -39,8 +39,7 @@ $pagination-hover-bg: $pagination-focus-bg;
 $form-file-button-bg: $form-file-button-hover-bg;
 $dropdown-link-hover-bg: $form-file-button-hover-bg;
 
-@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Quicksand:wght@300..700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=family=Quicksand:wght@300..700&display=swap');
 
 $font-family-sans-serif: "Quicksand", sans-serif;
 $headings-font-weight: 700;
@@ -94,16 +93,6 @@ $headings-font-weight: 700;
     background-size: cover;
     object-position: center;
     object-fit: cover;
-}
-
-
-.material-symbols-rounded {
-    font-family: "Material Symbols Rounded";
-    font-variation-settings:
-        'FILL' 1,
-        'wght' 400,
-        'GRAD' 0,
-        'opsz' 24;
 }
 
 .flex-center {

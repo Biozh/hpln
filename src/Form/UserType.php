@@ -84,7 +84,6 @@ class UserType extends AbstractType
         $isSuperAdmin = in_array('ROLE_SUPER_ADMIN', $currentUser->getRoles(), true);
         $isAdmin = in_array('ROLE_ADMIN', $currentUser->getRoles(), true);
 
-        // ✅ Condition : peut modifier si...
         $canEditRoles = (
             // on est super admin et on modifie soi-même
             ($isSelf && $isSuperAdmin)
@@ -92,7 +91,7 @@ class UserType extends AbstractType
             || (!$isSelf && $isEqualOrSuperior)
         );
 
-        if ($canEditRoles) {
+        if ($isAdmin || $isSuperAdmin) {
             $roleChoices = [
                 'Utilisateur' => 'ROLE_USER',
             ];

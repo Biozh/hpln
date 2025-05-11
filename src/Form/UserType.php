@@ -104,7 +104,7 @@ class UserType extends AbstractType
             ];
 
             // Seuls les admins peuvent attribuer le rôle admin
-            if ($isAdmin) {
+            if ($isAdmin || $isSuperAdmin) {
                 $roleChoices['Administrateur'] = 'ROLE_ADMIN';
             }
 

@@ -184,6 +184,9 @@ const handleAjaxError = (form, xhr, onError) => {
 
 // Gestion des événements document
 $(document).on('click', '.openForm', function () {
+    // remove tooltips
+    $(".tooltip ").remove();
+
     let url = $(this).data('url');
     let type = $(this).data('type') ?? 'edit';
     openModalForm(url, type);

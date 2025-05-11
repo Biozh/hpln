@@ -36,7 +36,7 @@ final class ProfileController extends AbstractController
             'form' => $form,
         ]);
     }
-    
+
 
     #[Route('/changer-theme', name: 'admin_profile_toggle_theme')]
     public function toggleTheme(Request $request): Response
@@ -47,7 +47,6 @@ final class ProfileController extends AbstractController
             return $this->json(['success' => true]);
         }
 
-        $user->setTheme($user->getTheme() === 'dark' ? 'light' : 'dark');
         $this->em->persist($user);
         $this->em->flush();
         return $this->json(['success' => true]);
@@ -67,5 +66,4 @@ final class ProfileController extends AbstractController
         $this->em->flush();
         return $this->json(['success' => true]);
     }
-
 }

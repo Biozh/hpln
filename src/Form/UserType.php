@@ -79,15 +79,23 @@ class UserType extends AbstractType
             ])
         ;
 
+        $roleChoices = [
+            'Administrateur Biozh' => 'ROLE_SUPER_ADMIN',
+            'Administrateur' => 'ROLE_ADMIN',
+            'Utilisateur' => 'ROLE_USER',
+        ];
+
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+            $roleChoices = array_merge([
+                'Switch' => 'ROLE_ALLOWED_TO_SWITCH',
+            ], $roleChoices);
+        }
+
         if ($this->security->isGranted('ROLE_ADMIN')) {
             $builder->add('roles', ChoiceType::class, [
                 'label' => 'Rôles',
                 'required' => true,
-                'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Administrateur' => 'ROLE_ADMIN',
-                    'Switch' => 'ROLE_ALLOWED_TO_SWITCH',
-                ],
+                'choices' => $roleChoices,
                 'attr' => [
                     'class' => 'select2',
                     'required' => false

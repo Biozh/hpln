@@ -29,6 +29,15 @@
     .text-body-reverse {
         color: $primary !important;
     }
+
+
+    .border-body {
+        border-color: $primary !important;
+    }
+
+    .border-body-reverse {
+        border-color: $secondary !important;
+    }
 }
 
 [data-bs-theme="dark"] {
@@ -66,6 +75,14 @@
 
     .text-body-reverse {
         color: $secondary !important;
+    }
+
+    .border-body {
+        border-color: $secondary !important;
+    }
+
+    .border-body-reverse {
+        border-color: $primary !important;
     }
 }
 

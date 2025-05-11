@@ -133,18 +133,19 @@ export default function Contact() {
                 </Row>
             </Container>
         </Container>
+
         <div className="toast-container position-fixed bottom-0 start-0 p-3 ">
-            <div id="successToast" className="toast align-items-center bg-body-reverse text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div id="successToast" className="toast align-items-center border border-2 border-body-reverse bg-body-reverse text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
                 <div className="d-flex">
                     <div className="toast-body">
                         Message envoyé avec succès !
                     </div>
                 </div>
             </div>
-            <div id="errorToast" className="toast align-items-center bg-body-reverse text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div id="errorToast" className="toast show align-items-center border border-2 border-body-reverse bg-body-reverse text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
                 <div className="d-flex">
                     <div className="toast-body">
-                        Message envoyé avec succès !
+                        Erreur lors de l'envoi du message !
                     </div>
                 </div>
             </div>

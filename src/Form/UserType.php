@@ -42,9 +42,9 @@ class UserType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passe doivent correspondre.',
+                'invalid_message' => 'Les mots de passe ne correspondent pas.',
                 'required' => isset($options['data']) && $options['data']->getId() ? false : true,
-                'mapped' => false, // intercepted by form event
+                'mapped' => false,
                 'first_options' => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Répéter le mot de passe'],
             ])

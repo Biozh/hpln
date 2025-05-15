@@ -17,6 +17,7 @@ $("form.needs-validation").on('submit', function (e) {
 
 export const onModalHidden = function () {
     $(this).remove();
+    $(".tooltip").fadeOut();
 };
 // Fonction pour initialiser un modal avec un formulaire
 export const openModalForm = (url, type = 'edit', cb = () => { }) => {
@@ -135,6 +136,14 @@ const disableSubmitButton = (form) => {
     const submitBtn = form.find('[type="submit"]');
     submitBtn.prop('disabled', true).addClass('disabled');
     submitBtn.prepend('<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>');
+
+    // also add the spinner to the outside button
+    // (submit button that is not inside the form, containing form="formId")
+    const outSideSubmitBtn = $("[form='" + form.attr('id') + "']");
+    if (outSideSubmitBtn.length > 0) {
+        outSideSubmitBtn.prop('disabled', true).addClass('disabled');
+        outSideSubmitBtn.prepend('<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>');
+    }
 };
 
 // Fonction pour réactiver le bouton de soumission du formulaire
@@ -142,6 +151,14 @@ const enableSubmitButton = (form) => {
     const submitBtn = form.find('[type="submit"]');
     submitBtn.prop('disabled', false).removeClass('disabled');
     submitBtn.find('.spinner-border').remove();
+
+    // also remove the spinner from the outside button
+    // (submit button that is not inside the form, containing form="formId")
+    const outSideSubmitBtn = $("[form='" + form.attr('id') + "']");
+    if (outSideSubmitBtn.length > 0) {
+        outSideSubmitBtn.prop('disabled', false).removeClass('disabled');
+        outSideSubmitBtn.find('.spinner-border').remove();
+    }
 };
 
 // Fonction pour traiter une réponse Ajax réussie
@@ -183,8 +200,6 @@ const handleAjaxError = (form, xhr, onError) => {
 
 // Gestion des événements document
 $(document).on('click', '.openForm', function () {
-    $(".tooltip").remove();
-
     const button = $(this);
 
     // Empêche double clic
@@ -222,6 +237,7 @@ $(document).on('click', '.openForm', function () {
             .prop('disabled', false)
             .css({ width: '', height: '' }) // on remet à l’état auto
             .html(originalContent);
+        $(".tooltip").fadeOut();
     });
 });
 
@@ -272,6 +288,8 @@ $("[data-ajax-preview]").each(function () {
                 const file = e.target.files[0];
                 const reader = new FileReader();
                 reader.onload = function (e) {
+                    // take of the user initials
+                    preview.html("");
                     if (preview.is('img')) {
                         preview.attr('src', e.target.result);
                     } else {

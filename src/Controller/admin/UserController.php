@@ -5,16 +5,14 @@ namespace App\Controller\admin;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Service\Datatable;
+use App\Service\Tools;
 use App\Service\UserRoleComparator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -64,6 +62,22 @@ final class UserController extends AbstractController
                 'selector' => 'u.lastname',
             ],
             [
+                'title' => 'Rôles',
+                'name' => 'roles',
+                'sort' => true,
+                'search' => false,
+                'filter' => true,
+                'type' => 'select',
+                'choices' => [
+                    '' => '',
+                    'ROLE_SUPER_ADMIN' => 'Admin Biozh',
+                    'ROLE_ADMIN' => 'Administrateur',
+                    'ROLE_USER' => 'Utilisateur',
+                    'ROLE_ALLOWED_TO_SWITCH' => 'Switch',
+                ],
+                "selector" => 'u.roles',
+            ],
+            [
                 'title' => 'Actions',
                 'name' => 'actions',
                 'sort' => false,
@@ -85,14 +99,27 @@ final class UserController extends AbstractController
 
             foreach ($records['results'] as $i => $result) {
                 $avatarDir = $this->generateUrl('front_index') . 'uploads/avatars/' . $result["picture_name"];
-                $avatar = "<div class='rounded-circle p-3 bg-light cover text-secondary flex-center border border-light' style='width: 32px; height: 32px;" .
+                $avatar = "<div class='rounded-circle p-3 fs-6 bg-light cover text-secondary flex-center border border-light' style='width: 32px; height: 32px;" .
                     ($result["picture_name"] !== null ? " background-image: url($avatarDir);" : '') .
-                    "'>" . ($result["picture_name"] ? "" : (mb_substr($result["firstname"], 0, 1) . mb_substr($result["lastname"], 0, 1))) . "</div>";
+                    "'>" . ($result["picture_name"] ? "" : strtoupper(mb_substr($result["firstname"], 0, 1) . mb_substr($result["lastname"], 0, 1))) . "</div>";
 
                 // On doit construire un faux user pour comparer les rôles
                 $targetUser = (new User())
                     ->setEmail($result['email'])
                     ->setRoles(json_decode($result['roles'], true) ?? []);
+
+
+                $roles = "<div class='d-flex align-items-center h-100 gap-1'>";
+                foreach (json_decode($result['roles'], true) as $role) {
+                    $dataRole = [
+                        "ROLE_SUPER_ADMIN" => "Admin Biozh",
+                        "ROLE_ADMIN" => "Administrateur",
+                        "ROLE_USER" => "Utilisateur",
+                        "ROLE_ALLOWED_TO_SWITCH" => "Switch",
+                    ];
+                    $roles .= "<span class='badge bg-primary'>$dataRole[$role]</span>";
+                }
+                $roles .= "</div>";
 
                 $actions = '<div class="md-btn-group d-flex align-items-center justify-content-end">';
                 $actions .= '<button data-url="' . $this->generateUrl('admin_user_form', ['id' => $result['id']]) . '" data-type="see" class="btn btn-sm btn-secondary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Consulter"><span class="material-symbols-rounded fs-6">visibility</span></button>';
@@ -110,6 +137,7 @@ final class UserController extends AbstractController
                     'email' => $result['email'],
                     'firstname' => $result['firstname'],
                     'lastname' => $result['lastname'],
+                    'roles' => $roles,
                     'actions' => $actions,
                 ];
 
@@ -127,7 +155,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/formulaire/{id?}', name: 'admin_user_form', methods: ['GET', 'POST'])]
-    public function new(User $user = null, Request $request, TokenStorageInterface $tokenStorage): Response
+    public function new(?User $user = null, Request $request, TokenStorageInterface $tokenStorage, Tools $tools): Response
     {
         $user = $user ?? new User();
         $form = $this->createForm(UserType::class, $user);
@@ -167,7 +195,6 @@ final class UserController extends AbstractController
                 return $this->json([
                     'success' => true,
                     'message' => $message,
-                    'redirect' => $this->generateUrl('admin_user_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
                 ]);
             }
 
@@ -183,27 +210,7 @@ final class UserController extends AbstractController
                 $tokenStorage->setToken($token);
             }
 
-            $errors = [];
-            foreach ($form->getErrors(true) as $error) {
-                $formField = $error->getOrigin();
-                $fieldName = $formField->getName();
-
-                // Check if the field is a child of RepeatedType
-                if ($formField->getParent() && $formField->getParent()->getConfig()->getType()->getInnerType() instanceof RepeatedType) {
-                    $parentName = $formField->getParent()->getName();
-                    $fieldName = sprintf('user[%s][%s]', $parentName, $formField->getName()); // Ex: user[password][first]
-                }
-                // check if the field is a child of FileType
-                else if ($formField->getConfig()->getType()->getInnerType() instanceof FileType) {
-                    $fieldName = sprintf('user[%s][%s]', 'picture', $formField->getName());
-                } else {
-                    $fieldName = sprintf('user[%s]', $fieldName);
-                }
-                $errors[] = [
-                    'field' => $fieldName,
-                    'message' => $error->getMessage(),
-                ];
-            }
+            $errors = $tools->getFormErrors($form);
 
             return $this->json(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
         }

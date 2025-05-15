@@ -9,7 +9,7 @@ import { initTooltip } from "../js/form/tooltip";
 import { Dropdown } from 'bootstrap';
 
 export const initDatatable = (datatables = $(".datatable[data-url]")) => {
-    datatables.each(function() {
+    datatables.each(function () {
         var table = $(this);
         const tableEl = $(this);
 
@@ -28,8 +28,8 @@ export const initDatatable = (datatables = $(".datatable[data-url]")) => {
         var aoColumns = [];
 
 
-        $(this).find('thead th').each(function(i) {
-            if($(this).attr('data-not-orderable') !== undefined && !notOrderable.includes(i)) {
+        $(this).find('thead th').each(function (i) {
+            if ($(this).attr('data-not-orderable') !== undefined && !notOrderable.includes(i)) {
                 notOrderable.push(i);
             }
 
@@ -39,7 +39,7 @@ export const initDatatable = (datatables = $(".datatable[data-url]")) => {
         });
 
         aoColumns.map((column, index) => {
-            if(notOrderable.includes(index)) {
+            if (notOrderable.includes(index)) {
                 column.orderable = false;
             }
         });
@@ -69,31 +69,31 @@ export const initDatatable = (datatables = $(".datatable[data-url]")) => {
             }
         });
 
-        $(window).on("resize", function() {
+        $(window).on("resize", function () {
             console.log("ok")
             table.columns.adjust().responsive.recalc();
         })
-        
+
         // filters
-        tableEl.parent().parent().find("[data-bs-dismiss='dropdown']").on("click", function(e) {
+        tableEl.parent().parent().find("[data-bs-dismiss='dropdown']").on("click", function (e) {
             const dropdownElement = $(this).closest('.dropdown').find('[data-bs-toggle="dropdown"]')[0];
             const dropdownInstance = Dropdown.getOrCreateInstance(dropdownElement);
             dropdownInstance.hide();
         });
-        tableEl.parent().parent().find(".dropdown.filter form").on("reset", function(e) {
+        tableEl.parent().parent().find(".dropdown.filter form").on("reset", function (e) {
             setTimeout(() => {
                 $(this).trigger("submit");
             }, 1)
         })
-        tableEl.parent().parent().find(".dropdown.filter form").on("submit", function(e) {
+        tableEl.parent().parent().find(".dropdown.filter form").on("submit", function (e) {
             e.preventDefault();
-            $(this).find('[data-filter]').each(function() {
+            $(this).find('[data-filter]').each(function () {
                 var columnIdx = $(this).data('filter');
                 var value = $(this).val();
                 table.column(columnIdx).search(value);
                 console.log(value)
             });
-            
+
             table.columns.adjust().responsive.recalc();
             table.draw();
 
@@ -104,18 +104,18 @@ export const initDatatable = (datatables = $(".datatable[data-url]")) => {
         })
 
         // search
-        $(this).find(".filter .dt-orderable-asc").on('keydown', function(e) { 
-            if(e.key === "Enter") {
+        $(this).find(".filter .dt-orderable-asc").on('keydown', function (e) {
+            if (e.key === "Enter") {
                 e.preventDefault();
                 e.stopPropagation();
             }
-         });
-        $(this).find('.table-filter').on('keyup change', function() {
+        });
+        $(this).find('.table-filter').on('keyup change', function () {
             var i = $(this).data('filter');
             table.columns.adjust().responsive.recalc();
             table.column(i).search($(this).val()).draw();
         });
-        $(this).find(".filter .dt-orderable-asc").on('click', function(e) { e.preventDefault(); e.stopPropagation(); });
+        $(this).find(".filter .dt-orderable-asc").on('click', function (e) { e.preventDefault(); e.stopPropagation(); });
     });
 };
 

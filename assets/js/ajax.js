@@ -53,6 +53,8 @@ export const openModalForm = (url, type = 'edit', cb = () => { }) => {
                                 const file = e.target.files[0];
                                 const reader = new FileReader();
                                 reader.onload = function (e) {
+                                    // take of the user initials
+                                    preview.html("");
                                     if (preview.is('img')) {
                                         preview.attr('src', e.target.result);
                                     } else {

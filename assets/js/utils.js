@@ -5,14 +5,14 @@ export const disableForm = (modal) => {
     modal.find(".btn").addClass("disabled");
 };
 
-export const showAlert = (type, message, callback = () => {}) => {
-    $('#alert-'+type).find(".alert-content").html(message)
-    $('#alert-'+type).find(".close").on('click', function() {
-        $('#alert-'+type).fadeOut(500, callback)
+export const showAlert = (type, message, callback = () => { }) => {
+    $('#alert-' + type).find(".alert-content").html(message)
+    $('#alert-' + type).find(".close").on('click', function () {
+        $('#alert-' + type).fadeOut(500, callback)
     })
-    $('#alert-'+type).fadeIn(500, () => {
+    $('#alert-' + type).fadeIn(500, () => {
         setTimeout(() => {
-            $('#alert-'+type).fadeOut(500, callback)
-        }, 2000)
+            $('#alert-' + type).fadeOut(500, callback)
+        }, 8000)
     })
 }

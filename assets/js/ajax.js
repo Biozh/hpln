@@ -18,7 +18,7 @@ $("form.needs-validation").on('submit', function (e) {
 export const onModalHidden = function () {
     console.log("removing ", $(this))
     $(this).remove();
-    console.log("deleted");
+    $(".tooltip").fadeOut();
 };
 // Fonction pour initialiser un modal avec un formulaire
 export const openModalForm = (url, type = 'edit', cb = () => { }) => {
@@ -38,6 +38,7 @@ export const openModalForm = (url, type = 'edit', cb = () => { }) => {
                 modal.get(0).addEventListener('hidden.bs.modal', onModalHidden);
 
                 bsModal.show();
+                if (cb) cb();
 
                 initSelect2(modal.find(".select2"));
                 initTooltip();
@@ -136,6 +137,14 @@ const disableSubmitButton = (form) => {
     const submitBtn = form.find('[type="submit"]');
     submitBtn.prop('disabled', true).addClass('disabled');
     submitBtn.prepend('<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>');
+
+    // also add the spinner to the outside button
+    // (submit button that is not inside the form, containing form="formId")
+    const outSideSubmitBtn = $("[form='" + form.attr('id') + "']");
+    if (outSideSubmitBtn.length > 0) {
+        outSideSubmitBtn.prop('disabled', true).addClass('disabled');
+        outSideSubmitBtn.prepend('<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>');
+    }
 };
 
 // Fonction pour réactiver le bouton de soumission du formulaire
@@ -143,6 +152,14 @@ const enableSubmitButton = (form) => {
     const submitBtn = form.find('[type="submit"]');
     submitBtn.prop('disabled', false).removeClass('disabled');
     submitBtn.find('.spinner-border').remove();
+
+    // also remove the spinner from the outside button
+    // (submit button that is not inside the form, containing form="formId")
+    const outSideSubmitBtn = $("[form='" + form.attr('id') + "']");
+    if (outSideSubmitBtn.length > 0) {
+        outSideSubmitBtn.prop('disabled', false).removeClass('disabled');
+        outSideSubmitBtn.find('.spinner-border').remove();
+    }
 };
 
 // Fonction pour traiter une réponse Ajax réussie
@@ -184,13 +201,47 @@ const handleAjaxError = (form, xhr, onError) => {
 
 // Gestion des événements document
 $(document).on('click', '.openForm', function () {
-    // remove tooltips
-    $(".tooltip ").remove();
+    const button = $(this);
 
-    let url = $(this).data('url');
-    let type = $(this).data('type') ?? 'edit';
-    openModalForm(url, type);
+    // Empêche double clic
+    if (button.hasClass('loading')) return;
+
+    const originalContent = button.html();
+    const originalWidth = button.outerWidth();
+    const originalHeight = button.outerHeight();
+
+    // Appliquer taille fixe
+    button
+        .addClass('loading')
+        .prop('disabled', true)
+        .css({
+            position: 'relative',
+            width: originalWidth,
+            height: originalHeight,
+        });
+
+    // Masquer le contenu sans le retirer
+    button.html(`
+        <span class="btn-content" style="opacity: 0;">${originalContent}</span>
+        <div class="flex-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+            </span>
+        </div>
+    `);
+
+    const url = button.data('url');
+    const type = button.data('type') ?? 'edit';
+
+    openModalForm(url, type, () => {
+        button
+            .removeClass('loading')
+            .prop('disabled', false)
+            .css({ width: '', height: '' }) // on remet à l’état auto
+            .html(originalContent);
+        $(".tooltip").fadeOut();
+    });
 });
+
 
 $(".ajaxForm").off('submit').on('submit', function (e) {
     console.log("sub")
@@ -239,6 +290,8 @@ $("[data-ajax-preview]").each(function () {
                 const file = e.target.files[0];
                 const reader = new FileReader();
                 reader.onload = function (e) {
+                    // take of the user initials
+                    preview.html("");
                     if (preview.is('img')) {
                         preview.attr('src', e.target.result);
                     } else {

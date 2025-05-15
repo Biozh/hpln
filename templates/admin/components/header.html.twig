@@ -2,7 +2,7 @@
 	<div class="col-12 bg-body rounded px-4 py-2">
 		<div class="flex-between">
 			<div class="flex-center">
-				<img src="{{asset('assets/img/logo.svg')}}" alt="{{PROJECT_NAME}}" class="me-2 project-icon" height="42">
+				<a href="{{path('admin_index')}}"><img src="{{asset('assets/img/logo.svg')}}" alt="{{PROJECT_NAME}}" class="me-2 project-icon" height="42"></a>
 				{# <h1 class="fs-3 mb-0 d-none d-lg-block">{{PROJECT_NAME}}</h1> #}
 			</div>
 			<div class="flex-between">
@@ -18,8 +18,8 @@
 						{% if app.user.pictureName %}
 							<img src="{{ asset('uploads/avatars/') ~ app.user.pictureName}}" alt="{{app.user.firstname}} {{app.user.lastname}}" width="48" height="48" class="rounded-circle cover border border-light">
 						{% else %}
-							<div style="width: 30px; height: 30px" class="p-3 fs-6 rounded-circle cover bg-light text-secondary flex-center border border-light">
-								{{app.user.firstname|first}}{{app.user.lastname|first}}
+							<div style="width: 48px; height: 48px" class="p-3 fs-6 rounded-circle cover bg-light text-secondary flex-center border border-light">
+								{{app.user.firstname|upper|first}}{{app.user.lastname|upper|first}}
 							</div>
 						{% endif %}
 						<span class="mx-3 d-none d-lg-block fw-bold">{{app.user.firstname}} {{app.user.lastname}}</span>

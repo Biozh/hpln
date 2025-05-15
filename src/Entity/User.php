@@ -60,6 +60,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Ignore]
     #[Vich\UploadableField(mapping: 'avatars', fileNameProperty: 'pictureName', originalName: 'pictureOriginalName')]
+    #[Assert\File(
+        maxSize: '1M',
+        maxSizeMessage: 'La taille du fichier ne doit pas dépasser 1 Mo.',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+        mimeTypesMessage: 'Veuillez sélectionner une image valide (jpeg, png, webp).'
+    )]
     private ?File $picture = null;
 
     #[ORM\Column(nullable: true)]

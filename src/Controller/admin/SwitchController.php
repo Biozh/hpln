@@ -58,14 +58,14 @@ final class SwitchController extends AbstractController
             [
                 'title' => 'Rôles',
                 'name' => 'roles',
-                'sort' => false,
+                'sort' => true,
                 'search' => true,
                 'filter' => false,
                 'type' => 'select',
                 'choices' => [
                     '' => '',
-                    'ROLE_ADMIN' => 'Administrateur',
                     'ROLE_SUPER_ADMIN' => 'Admin Biozh',
+                    'ROLE_ADMIN' => 'Administrateur',
                     'ROLE_USER' => 'Utilisateur',
                     'ROLE_ALLOWED_TO_SWITCH' => 'Switch',
                 ],

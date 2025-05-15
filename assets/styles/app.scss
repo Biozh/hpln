@@ -25,7 +25,7 @@ $custom-colors: (
     "dark": $dark,
     "light": $light,
     "success": #69BD70,
-    "danger": #202222,
+    "danger": $primary,
     "warning": #EFB447,
     "info": #5AC0E5
 );
@@ -110,7 +110,7 @@ $headings-font-weight: 700;
 
 .invalid-focus {
     outline: 0 !important;
-    box-shadow: 0 0 0 $focus-ring-width rgba($danger, $focus-ring-opacity) !important;
+    box-shadow: 0 0 0 $focus-ring-width rgba($form-invalid-border-color, $focus-ring-opacity) !important;
     border-color: $form-invalid-border-color !important;
 
     // color: $form-valid-color !important;
@@ -120,8 +120,6 @@ $headings-font-weight: 700;
     outline: 0 !important;
     box-shadow: 0 0 0 $focus-ring-width rgba($success, $focus-ring-opacity) !important;
     border-color: $form-valid-border-color !important;
-
-
 }
 
 .primary-focus {
@@ -325,16 +323,13 @@ $headings-font-weight: 700;
 }
 
 .was-validated .select2:valid+.select2 .select2-selection {
-    // border-color: $form-valid-border-color !important;
-    // color: $form-valid-color !important;
-    @extend .valid-focus;
+    border-color: $form-valid-border-color !important;
 }
 
 .was-validated .select2:invalid+.select2 .select2-selection {
-    // border-color: $form-invalid-border-color !important;
-    // color: $form-invalid-color !important;
-    @extend .invalid-focus;
+    border-color: $form-invalid-border-color !important;
 }
+
 
 .select2:disabled+.select2 .select2-selection__choice {
     background-color: $body-secondary-bg !important;
@@ -346,10 +341,13 @@ $headings-font-weight: 700;
 }
 
 .select2-container--bootstrap-5.select2-container--focus .select2-selection,
-.select2-container--bootstrap-5.select2-container--open .select2-selection {
-    // box-shadow: 0 0 0 0.25rem rgba(106, 163, 102, 0.25);
-    @extend .primary-focus;
+.select2-container--bootstrap-5.select2-container--open .select2-selection,
+.select2:not(:valid):not(:invalid)+.select2.select2-container--focus .select2-selection,
+.select2:not(:valid):not(:invalid)+.select2.select2-container--open .select2-selection {
+    border-color: $primary !important;
+    box-shadow: 0 0 0 $focus-ring-width rgba($primary, $focus-ring-opacity);
 }
+
 
 .select2:not(:valid):not(:invalid)+.select2.select2-container--focus .select2-selection,
 .select2:not(:valid):not(:invalid)+.select2.select2-container--open .select2-selection {

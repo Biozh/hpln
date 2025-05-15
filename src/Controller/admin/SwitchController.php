@@ -107,7 +107,7 @@ final class SwitchController extends AbstractController
                 $actions = '<div class="md-btn-group d-flex align-items-center justify-content-end">';
                 $user = $this->getUser();
                 if ($user instanceof User && $result['id'] != $user->getId()) {
-                    $actions .= '<a href="' . $this->generateUrl('admin_index', ['_switch_user' => $result['email']]) . '" class="btn btn-sm btn-primary flex-center me-2" data-bs-toggle="tooltip" data-bs-title="Switch"><span class="material-symbols-rounded fs-6">logout</span></a>';
+                    $actions .= '<a href="' . $this->generateUrl('admin_index', ['_switch_user' => $result['email']]) . '" class="btn btn-sm btn-dark flex-center me-2" data-bs-toggle="tooltip" data-bs-title="Switcher sur le compte"><span class="material-symbols-rounded fs-6">logout</span></a>';
                 }
                 $actions .= '</div>';
 

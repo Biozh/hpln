@@ -196,7 +196,6 @@ final class UserController extends AbstractController
                 $tokenStorage->setToken($newToken);
 
                 $message = 'Profil enregistré avec succès !';
-                $this->addFlash('success', $message);
 
                 return $this->json([
                     'success' => true,

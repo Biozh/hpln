@@ -159,44 +159,21 @@ final class UserController extends AbstractController
     {
         $user = $user ?? new User();
 
-        // Check if the user is granted ROLE_ADMIN or if the user is the same as the logged-in user
-        if (!$this->isGranted('ROLE_ADMIN') && $user !== $this->getUser()) {
-            throw $this->createAccessDeniedException("Vous n'avez pas le droit d'accéder à ce formulaire.");
-        }
-
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        $user = $user ?? new User();
-        $currentUser = $this->getUser();
-
-
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // ⛔ Sécurité : on bloque si l'utilisateur n'est ni lui-même ni supérieur hiérarchiquement
-            if ($user->getId() !== null && !$this->roleComparator->isEqualOrSuperior($currentUser, $user)) {
+            if ($user->getId() !== null && !$this->roleComparator->isEqualOrSuperior($this->getUser(), $user)) {
                 throw $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier cet utilisateur.");
             }
 
-            $this->em->persist($user);
-            $this->em->flush();
-
-            $token = $tokenStorage->getToken();
-
             if ($user === $this->getUser()) {
+
+                $this->em->persist($user);
+                $this->em->flush();
                 $user->setPicture(null);
 
-                if ($token instanceof SwitchUserToken) {
-                    $originalToken = $token->getOriginalToken();
-                    $newToken = new SwitchUserToken($user, 'main', $user->getRoles(), $originalToken);
-                } else {
-                    $newToken = new UsernamePasswordToken($user, 'main', $user->getRoles());
-                }
-
-                $tokenStorage->setToken($newToken);
-
                 $message = 'Profil enregistré avec succès !';
-
                 return $this->json([
                     'success' => true,
                     'message' => $message,
@@ -206,19 +183,13 @@ final class UserController extends AbstractController
             return $this->json(['success' => true, 'message' => 'Utilisateur enregistré avec succès !']);
         }
 
-
         if ($form->isSubmitted() && !$form->isValid()) {
-
-            if ($user === $this->getUser()) {
-                $user->setPicture(null);
-                $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-                $tokenStorage->setToken($token);
-            }
-
             $errors = $tools->getFormErrors($form);
+            $user->setPicture(null);
 
             return $this->json(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
         }
+
         return $this->render('user/form.html.twig', [
             'user' => $user,
             'form' => $form,

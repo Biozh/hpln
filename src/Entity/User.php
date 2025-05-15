@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -28,34 +28,61 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Assert\Email]
-    #[Assert\NotBlank]
+    #[Assert\Email(message: "L'adresse email est invalide.")]
+    #[Assert\NotBlank(message: "L'adresse email est obligatoire.")]
     #[Groups(['video:read'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: "Le prénom est obligatoire.")]
-    #[Assert\Regex(pattern: "/^[\p{L} '-]+$/u", message: "Le prénom est invalide.")]
+    #[Assert\Regex(
+        pattern: "/^[\p{L} '-]+$/u",
+        message: "Le prénom contient des caractères non autorisés."
+    )]
+    #[Assert\Length(
+        max: 50,
+        maxMessage: "Le prénom ne doit pas dépasser {{ limit }} caractères."
+    )]
     #[Groups(['video:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: "Le nom est obligatoire.")]
-    #[Assert\Regex(pattern: "/^[\p{L} '-]+$/u", message: "Le nom est invalide.")]
+    #[Assert\Regex(
+        pattern: "/^[\p{L} '-]+$/u",
+        message: "Le nom contient des caractères non autorisés."
+    )]
+    #[Assert\Length(
+        max: 50,
+        maxMessage: "Le nom ne doit pas dépasser {{ limit }} caractères."
+    )]
     #[Groups(['video:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "L'adresse est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "L'adresse ne doit pas dépasser {{ limit }} caractères."
+    )]
     private ?string $address = null;
 
     #[ORM\Column(length: 100)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "La ville est obligatoire.")]
+    #[Assert\NotNull(message: "La ville ne peut pas être nulle.")]
+    #[Assert\Length(
+        max: 100,
+        maxMessage: "La ville ne doit pas dépasser {{ limit }} caractères."
+    )]
     private ?string $city = null;
 
-    #[ORM\Column(length: 10)]
-    #[Assert\NotBlank]
-    #[Assert\Regex(pattern: "/^\d{5}(-\d{4})?$/", message: "Le code postal doit être au fortmat 12345 or 12345-6789.")]
+    #[ORM\Column(length: 5)]
+    #[Assert\NotBlank(message: "Le code postal est obligatoire.")]
+    #[Assert\Length(
+        min: 5,
+        max: 5,
+        maxMessage: "Le code postal doit faire {{limit}} caractères."
+    )]
     private ?string $zip = null;
 
     #[Ignore]
@@ -80,22 +107,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    private array $roles = [];
+    private array $roles = ["ROLE_USER"];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $sidebar = null;
+
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $sidebar = null;
 
     /**
      * @var Collection<int, Video>
@@ -224,7 +253,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param list<string> $roles
      */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles = ['ROLE_USER']): static
     {
         $this->roles = $roles;
 

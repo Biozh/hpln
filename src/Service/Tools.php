@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormInterface;
@@ -27,10 +29,20 @@ class Tools
                 $parentName = $formField->getParent()->getName();
                 $fieldName = sprintf('%s[%s][%s]', $formName, $parentName, $fieldName);
             }
+
             // Gestion des fichiers vich (ex: user[picture][file])
             elseif ($formField->getConfig()->getType()->getInnerType() instanceof VichImageType) {
                 $fieldName = sprintf('%s[%s][%s]', $formName, $fieldName, "file");
             }
+
+            // gestion des champs choiceType et EntityType (ex: user[roles][])
+            elseif (
+                $formField->getConfig()->getType()->getInnerType() instanceof ChoiceType ||
+                $formField->getConfig()->getType()->getInnerType() instanceof EntityType
+            ) {
+                $fieldName = sprintf('%s[%s][]', $formName, $fieldName);
+            }
+
             // Champ simple (ex: user[email])
             else {
                 $fieldName = sprintf('%s[%s]', $formName, $fieldName);

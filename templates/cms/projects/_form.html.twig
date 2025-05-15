@@ -1,70 +1,85 @@
-    
-{{ form_start(form, {'attr': {
-    'method': 'POST', 
-    'action': path('admin_cms_projects_form', {id: form.vars.value.id}), 
-    'novalidate': 'novalidate', 
-    'class': 'needs-validation ajaxForm',
-    'id': 'video-form',
-    'enctype': 'multipart/form-data',
-    'data-url': path('admin_cms_projects_form', {id: form.vars.value.id}),
-}}) }}
-    <div>
+{% if init is not defined %}
+	{% set init = true %}
+{% endif %}
 
-        <div class="row">
-            <div class="col-12">
-                <div class="mb-3">
-                    {{ form_widget(form.title) }}
-                </div>
-            </div>
+{% if submit is not defined %}
+	{% set submit = true %}
+{% endif %}
+
+{% if init == true %}
+    {{ 
+        form_start(form, {'attr': {
+            'method': 'POST', 
+            'action': path('admin_cms_projects_form', {id: form.vars.value.id}), 
+            'novalidate': 'novalidate', 
+            'class': 'needs-validation ajaxForm',
+            'id': 'projects-form',
+            'enctype': 'multipart/form-data',
+            'data-url': path('admin_cms_projects_form', {id: form.vars.value.id}),
+        }}) 
+    }}
+{% endif %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="mb-3">
+            {{ form_widget(form.title) }}
         </div>
+    </div>
+</div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-3">
-                    {{ form_label(form.description) }}
-                    {{ form_widget(form.description) }}
-                </div>
-            </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="mb-3">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description) }}
         </div>
+    </div>
+</div>
 
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-3">
-                    {{ form_widget(form.url) }}
-                </div>
-            </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="mb-3">
+            {{ form_widget(form.url) }}
         </div>
+    </div>
+</div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-3">
-                    {{ form_widget(form.category) }}
-                </div>
-            </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="mb-3">
+            {{ form_widget(form.category) }}
         </div>
+    </div>
+</div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-3">
-                    {{ form_widget(form.users) }}
-                </div>
-            </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="mb-3">
+            {{ form_widget(form.users) }}
         </div>
+    </div>
+</div>
 
-        {% if form_errors(form) %}
-            <div class="row mb-3">
-                <div class="col-12 text-danger">
-                    {{ form_errors(form) }}
-                </div>
-            </div>
-        {% endif %}
-
-        <div class="row">
-            <div class="col-12">
-                <div class="d-flex align-items-center">
-                <button class="btn btn-primary me-2" type="submit">Sauvegarder</button>
-                </div>
-            </div>
+{% if form_errors(form) %}
+    <div class="row mb-3">
+        <div class="col-12 text-danger">
+            {{ form_errors(form) }}
         </div>
-{{ form_end(form) }}
+    </div>
+{% endif %}
+
+{% if submit == true %}
+	<div class="row">
+		<div class="col-12">
+			<div class="d-flex align-items-center justify-content-end">
+				<button class="btn btn-primary me-2" type="submit">Sauvegarder</button>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+{% if init == true %}
+	{{ form_end(form) }}
+{% endif %}

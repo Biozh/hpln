@@ -1,116 +1,132 @@
-    
-{{ form_start(form, {'attr': {
-    'method': 'POST', 
-    'action': path('admin_user_form', {id: form.vars.value.id}), 
-    'novalidate': 'novalidate', 
-    'class': 'needs-validation ajaxForm',
-    'id': 'user-form',
-    'enctype': 'multipart/form-data',
-    'data-url': path('admin_user_form', {id: form.vars.value.id}),
-}}) }}
-    <div>
-        <div class="row mt-3 mb-1">
-            <div class="col-12">
-                <small class="text-muted mt-5">Informations générales</small>
-                <hr class="mt-1" />
-            </div>
-        </div>
+{% if init is not defined %}
+	{% set init = true %}
+{% endif %}
 
-        <div class="row">
-            <div class="col-xl-6">
-                <div class="mb-3">
-                    <div class="flex-between align-items-start">
-                        <label for="user_picture_file" data-ajax-preview="user_picture_file" class="btn p-3 bg-body-secondary form-control rounded-circle cover" style="width: 128px; height: 128px; {% if form.vars.value.pictureName %}background-image: url({{asset('uploads/avatars/' ~ form.vars.value.pictureName)}});{% endif %}"></label>
-                        <div class="flex-grow-1 ms-3">
-                            {{ form_widget(form.picture) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form_widget(form.firstname) }}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form_widget(form.lastname) }}
-                </div>
-            </div>
-        </div>
+{% if submit is not defined %}
+	{% set submit = true %}
+{% endif %}
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-3">
-                    {{ form_widget(form.email) }}
-                </div>
-            </div>
-        </div>
+{% if init == true %}
+	{{ 
+        form_start(form, {'attr': {
+            'method': 'POST', 
+            'action': path('admin_user_form', {id: form.vars.value.id}), 
+            'novalidate': 'novalidate', 
+            'class': 'needs-validation ajaxForm',
+            'id': 'about-form',
+            'enctype': 'multipart/form-data',
+            'data-url': path('admin_user_form', {id: form.vars.value.id}),
+        }}) 
+	}}
+{% endif %}
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-3">
-                    {{ form_label(form.description) }}
-                    {{ form_widget(form.description) }}
-                </div>
-            </div>
-        </div>
+<div class="row mt-3 mb-1">
+	<div class="col-12">
+		<small class="text-muted mt-5">Informations générales</small>
+		<hr class="mt-1"/>
+	</div>
+</div>
 
-        <div class="row mt-3 mb-1">
-            <div class="col-12">
-                <small class="text-muted mt-5">Association</small>
-                <hr class="mt-1" />
-            </div>
-        </div>
+<div class="row">
+	<div class="col-xl-6">
+		<div class="mb-3">
+			<div class="flex-between align-items-start">
+				<label for="user_picture_file" data-ajax-preview="user_picture_file" class="btn p-3 bg-body-secondary form-control rounded-circle cover" style="width: 128px; height: 128px; {% if form.vars.value.pictureName %}background-image: url({{asset('uploads/avatars/' ~ form.vars.value.pictureName)}});{% endif %}"></label>
+				<div class="flex-grow-1 ms-3">
+					{{ form_widget(form.picture) }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<div class="mb-3">
+			{{ form_widget(form.firstname) }}
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="mb-3">
+			{{ form_widget(form.lastname) }}
+		</div>
+	</div>
+</div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-3">
-                    {{ form_widget(form.role_asso) }}
-                </div>
-            </div>
-        </div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="mb-3">
+			{{ form_widget(form.email) }}
+		</div>
+	</div>
+</div>
 
-        <div class="row mt-3 mb-1">
-            <div class="col-12">
-                <small class="text-muted mt-5">Adresse</small>
-                <hr class="mt-1" />
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-7">
-                <div class="mb-3">
-                    {{ form_widget(form.address, {'attr': {'autocomplete': 'username'}}) }}
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="mb-3">
-                    {{ form_widget(form.city, {'attr': {'autocomplete': 'username'}}) }}
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-2">
-                <div class="mb-3">
-                    {{ form_widget(form.zip, {'attr': {'autocomplete': 'username'}}) }}
-                </div>
-            </div>
-        </div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="mb-3">
+			{{ form_label(form.description) }}
+			{{ form_widget(form.description) }}
+		</div>
+	</div>
+</div>
 
-        {% if form_errors(form) %}
-            <div class="row mb-3">
-                <div class="col-12 text-danger">
-                    {{ form_errors(form) }}
-                </div>
-            </div>
-        {% endif %}
+<div class="row mt-3 mb-1">
+	<div class="col-12">
+		<small class="text-muted mt-5">Association</small>
+		<hr class="mt-1"/>
+	</div>
+</div>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="d-flex align-items-center">
-                <button class="btn btn-primary me-2" type="submit">Sauvegarder</button>
-                </div>
-            </div>
-        </div>
-{{ form_end(form) }}
+<div class="row">
+	<div class="col-md-12">
+		<div class="mb-3">
+			{{ form_widget(form.role_asso) }}
+		</div>
+	</div>
+</div>
+
+<div class="row mt-3 mb-1">
+	<div class="col-12">
+		<small class="text-muted mt-5">Adresse</small>
+		<hr class="mt-1"/>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-lg-7">
+		<div class="mb-3">
+			{{ form_widget(form.address, {'attr': {'autocomplete': 'username'}}) }}
+		</div>
+	</div>
+	<div class="col-md-6 col-lg-3">
+		<div class="mb-3">
+			{{ form_widget(form.city, {'attr': {'autocomplete': 'username'}}) }}
+		</div>
+	</div>
+	<div class="col-md-6 col-lg-2">
+		<div class="mb-3">
+			{{ form_widget(form.zip, {'attr': {'autocomplete': 'username'}}) }}
+		</div>
+	</div>
+</div>
+
+{% if form_errors(form) %}
+	<div class="row mb-3">
+		<div class="col-12 text-danger">
+			{{ form_errors(form) }}
+		</div>
+	</div>
+{% endif %}
+
+{% if submit == true %}
+	<div class="row">
+		<div class="col-12">
+			<div class="d-flex align-items-center justify-content-end">
+				<button class="btn btn-primary me-2" type="submit">Sauvegarder</button>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+{% if init == true %}
+	{{ form_end(form) }}
+{% endif %}

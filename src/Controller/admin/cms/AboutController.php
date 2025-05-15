@@ -70,8 +70,7 @@ final class AboutController extends AbstractController
             $records = $datatable->getScriptTable($sql, $columns, $this->em, "GROUP BY u.id");
             foreach ($records['results'] as $i => $result) {
                 $actions = '<div class="md-btn-group d-flex align-items-center justify-content-end">';
-                $actions .= '<button data-url="' . $this->generateUrl('admin_cms_about_form', ['id' => $result['id']]) . '" data-type="see" class="btn btn-sm btn-secondary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Consulter"><span class="material-symbols-rounded fs-6">visibility</span></button>';
-                $actions .= '<button data-url="' . $this->generateUrl('admin_cms_about_form', ['id' => $result['id']]) . '" data-type="edit" class="btn btn-sm btn-primary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Modifier"><span class="material-symbols-rounded fs-6">edit</span></button>';
+                $actions .= '<button data-url="' . $this->generateUrl('admin_user_form', ['id' => $result['id']]) . '" data-type="see" class="btn btn-sm btn-secondary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Consulter"><span class="material-symbols-rounded fs-6">visibility</span></button>';
                 $actions .= '<button data-url="' . $this->generateUrl('admin_cms_about_delete', ['id' => $result['id']]) . '" data-type="delete" class="btn btn-sm btn-danger flex-center openForm" data-bs-toggle="tooltip" data-bs-title="Supprimer"><span class="material-symbols-rounded fs-6">delete</span></button>';
                 $actions .= '</div>';
 
@@ -138,70 +137,6 @@ final class AboutController extends AbstractController
             "addMemberForm" => $addMemberForm->createView(),
             "description1" => $description1,
             "description2" => $description2,
-        ]);
-    }
-
-    #[Route('/formulaire/{id?}', name: 'admin_cms_about_form', methods: ['GET', 'POST'])]
-    public function new(User $user = null, Request $request, TokenStorageInterface $tokenStorage): Response
-    {
-        $user = $user ?? new User();
-        $form = $this->createForm(AboutUserType::class, $user);
-        $form->handleRequest($request);
-
-
-        $isLoggedUser = $user === $this->getUser();
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($user);
-            $this->em->flush();
-
-            if ($user === $this->getUser()) {
-                $user->setPicture(null);
-                $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-                $tokenStorage->setToken($token);
-
-                $message = 'Profil enregistré avec succès !';
-                // return $this->redirectToRoute('admin_user_index', [], Response::HTTP_SEE_OTHER);
-                $this->addFlash('success', $message);
-                return $this->json([
-                    'success' => true,
-                    'message' => $message,
-                ]);
-            }
-
-            return $this->json(['success' => true, 'message' => 'Utilisateur enregistré avec succès !']);
-        }
-
-
-        if ($form->isSubmitted() && !$form->isValid()) {
-
-            if ($user === $this->getUser()) {
-                $user->setPicture(null);
-                $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-                $tokenStorage->setToken($token);
-            }
-
-            $errors = [];
-            foreach ($form->getErrors(true) as $error) {
-                $formField = $error->getOrigin();
-                $fieldName = $formField->getName();
-                if ($formField->getConfig()->getType()->getInnerType() instanceof FileType) {
-                    $fieldName = sprintf('user[%s][%s]', 'picture', $formField->getName());
-                } else {
-                    $fieldName = sprintf('user[%s]', $fieldName);
-                }
-                $errors[] = [
-                    'field' => $fieldName,
-                    'message' => $error->getMessage(),
-                ];
-            }
-
-            return $this->json(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
-        }
-
-        return $this->render('cms/about/form.html.twig', [
-            'user' => $user,
-            'form' => $form,
         ]);
     }
 

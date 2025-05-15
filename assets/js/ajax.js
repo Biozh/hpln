@@ -299,7 +299,6 @@ $("[data-ajax-preview]").each(function () {
                     }
                 };
                 reader.readAsDataURL(file);
-
             }
         });
     }

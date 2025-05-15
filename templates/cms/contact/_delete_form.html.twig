@@ -1,23 +1,22 @@
-<div class="card bg-body">
-	<form action="{{ path('admin_user_delete', {'id': email.id}) }}">
+<div class="modal-header">
+	<div class="d-flex align-items-center justify-content-between w-100">
+		<h4 class="card-head mb-0">Confirmer</h4>
+		<div class="flex-between">
+			<div role="button" class="text-decoration-none flex-center" type="buton" data-bs-dismiss="modal" data-bs-toggle="tooltip" data-bs-title="Fermer" data-bs-placement="bottom">
+				<span class="material-symbols-rounded fs-6">close</span>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-body">    
+	<form id="form-delete-email" action="{{ path('admin_cms_contact_delete', {'id': email.id}) }}">
 		<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ email.id) }}">
-		<div class="card-header bg-body">
-			<div class="d-flex align-items-center justify-content-between">
-				<h4 class="card-head mb-0">Confirmer</h4>
-				<div class="flex-between">
-					<div role="button" class="text-decoration-none flex-center" type="buton" data-bs-dismiss="modal" data-bs-toggle="tooltip" data-bs-title="Fermer" data-bs-placement="bottom">
-						<span class="material-symbols-rounded fs-6">close</span>
-					</div>
-				</div>
-			</div>
-		</div>
 		<div class="card-body bg-body">
-			{{ message ? message: 'Voulez-vous vraiment effectuer cette suppression ?' }}
-		</div>
-		<div class="card-footer bg-body">
-			<div class="d-flex">
-				<button class="btn btn-dark me-2">Supprimer</button>
-			</div>
+			{{ message ? message : 'Voulez-vous vraiment effectuer cette suppression ?' }}
 		</div>
 	</form>
 </div>
+<div class="modal-footer">
+	<button class="btn btn-dark me-2" form="form-delete-email" type="submit">Supprimer</button>
+</div>
+

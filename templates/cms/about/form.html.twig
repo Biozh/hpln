@@ -1,16 +1,15 @@
 
-<div class="card bg-body">
-	<div class="card-header bg-body">
-        <div class="d-flex align-items-center justify-content-between">
-            <h4 class="card-head mb-0">{{form.vars.value.id is defined and form.vars.value.id is not null ? 'Modifier une vidéo' : 'Ajouter une vidéo'}}</h4>
-            <div class="flex-between">
-                <div role="button" class="text-decoration-none flex-center" type="buton" data-bs-dismiss="modal" data-bs-toggle="tooltip" data-bs-title="Fermer" data-bs-placement="bottom">
-                    <span class="material-symbols-rounded fs-6">close</span>
-                </div>
-            </div>
+<div class="modal-header">
+    <div class="d-flex align-items-center justify-content-between w-100">
+        <h4 class="card-head mb-0">{{form.vars.value.id is defined and form.vars.value.id is not null ? 'Modifier une vidéo' : 'Ajouter une vidéo'}}</h4>
+        <div role="button" class="text-decoration-none flex-center" type="buton" data-bs-dismiss="modal" data-bs-toggle="tooltip" data-bs-title="Fermer" data-bs-placement="bottom">
+            <span class="material-symbols-rounded fs-6">close</span>
         </div>
     </div>
-	<div class="card-body bg-body">
-        {{ include("cms/about/_form.html.twig", {form: form}) }}
-	</div>
+</div>
+<div class="modal-body">    
+    {{ include("cms/about/_form.html.twig", {form: form, submit: false}) }}
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary me-2" type="submit" form="about-form">Sauvegarder</button>
 </div>

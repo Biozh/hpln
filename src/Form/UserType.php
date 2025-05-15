@@ -39,29 +39,48 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Adresse e-mail',
                 'required' => true,
+                'empty_data' => '',
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
                 'required' => isset($options['data']) && $options['data']->getId() ? false : true,
                 'mapped' => false,
-                'first_options' => ['label' => 'Mot de passe'],
+                'first_options' => [
+                    'label' => 'Mot de passe',
+                    'constraints' => [
+                        new Assert\Length([
+                            'min' => 8,
+                            'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères.',
+                            'max' => 255,
+                        ]),
+                        new Assert\Regex([
+                            'pattern' => '/(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+/',
+                            'message' => 'Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.',
+                        ])
+                    ]
+                ],
                 'second_options' => ['label' => 'Répéter le mot de passe'],
             ])
             ->add('firstname', TextType::class, [
-                'label' => 'Prénom'
+                'label' => 'Prénom',
+                'empty_data' => '',
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'Nom'
+                'label' => 'Nom',
+                'empty_data' => '',
             ])
             ->add('address', TextType::class, [
-                'label' => 'Adresse'
+                'label' => 'Adresse',
+                'empty_data' => '',
             ])
             ->add('city', TextType::class, [
-                'label' => 'Ville'
+                'label' => 'Ville',
+                'empty_data' => '',
             ])
             ->add('zip', TextType::class, [
-                'label' => 'Code postal'
+                'label' => 'Code postal',
+                'empty_data' => '',
             ])
             ->add('picture', VichImageType::class, [
                 'label' => "Photo de profil",
@@ -102,7 +121,26 @@ class UserType extends AbstractType
                 'choices' => $roleChoices,
                 'multiple' => true,
                 'expanded' => false,
-                'attr' => ['class' => 'select2']
+                'attr' => ['class' => 'select2'],
+                'data' => $options['data']->getRoles() ?? [],
+                'constraints' => [
+                    new Assert\NotNull(['message' => 'Les rôles ne peuvent pas être nuls.']),
+                    new Assert\Count([
+                        'min' => 1,
+                        'minMessage' => 'Au moins un rôle doit être sélectionné.',
+                    ]),
+                    new Assert\All([
+                        new Assert\NotBlank(['message' => 'Chaque rôle doit être renseigné.']),
+                        new Assert\Type([
+                            'type' => 'string',
+                            'message' => 'Chaque rôle doit être une chaîne de caractères.',
+                        ]),
+                        new Assert\Choice([
+                            'choices' => array_values($roleChoices),
+                            'message' => 'Le rôle sélectionné est invalide.',
+                        ]),
+                    ]),
+                ],
             ]);
         }
 
@@ -143,13 +181,14 @@ class UserType extends AbstractType
                 $form->get('password')->get('second')->addError(new FormError('Les mots de passe ne correspondent pas.'));
             } else {
                 // Hachage du mot de passe si tout est correct
-                if ($password) {
+
+                // si le mot de passe est différent de l'ancien mot de passe
+                if ($password && count($form->getErrors(true, true)) === 0) {
                     $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
                     $user->setPassword($hashedPassword);
                 }
             }
         });
-
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();

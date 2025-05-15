@@ -158,39 +158,22 @@ final class UserController extends AbstractController
     public function new(?User $user = null, Request $request, TokenStorageInterface $tokenStorage, Tools $tools): Response
     {
         $user = $user ?? new User();
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        $user = $user ?? new User();
-        $currentUser = $this->getUser();
-
-
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // ⛔ Sécurité : on bloque si l'utilisateur n'est ni lui-même ni supérieur hiérarchiquement
-            if ($user->getId() !== null && !$this->roleComparator->isEqualOrSuperior($currentUser, $user)) {
+            if ($user->getId() !== null && !$this->roleComparator->isEqualOrSuperior($this->getUser(), $user)) {
                 throw $this->createAccessDeniedException("Vous n'avez pas les droits pour modifier cet utilisateur.");
             }
 
-            $this->em->persist($user);
-            $this->em->flush();
-
-            $token = $tokenStorage->getToken();
-
             if ($user === $this->getUser()) {
+
+                $this->em->persist($user);
+                $this->em->flush();
                 $user->setPicture(null);
 
-                if ($token instanceof SwitchUserToken) {
-                    $originalToken = $token->getOriginalToken();
-                    $newToken = new SwitchUserToken($user, 'main', $user->getRoles(), $originalToken);
-                } else {
-                    $newToken = new UsernamePasswordToken($user, 'main', $user->getRoles());
-                }
-
-                $tokenStorage->setToken($newToken);
-
                 $message = 'Profil enregistré avec succès !';
-
                 return $this->json([
                     'success' => true,
                     'message' => $message,
@@ -200,19 +183,13 @@ final class UserController extends AbstractController
             return $this->json(['success' => true, 'message' => 'Utilisateur enregistré avec succès !']);
         }
 
-
         if ($form->isSubmitted() && !$form->isValid()) {
-
-            if ($user === $this->getUser()) {
-                $user->setPicture(null);
-                $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-                $tokenStorage->setToken($token);
-            }
-
             $errors = $tools->getFormErrors($form);
+            $user->setPicture(null);
 
             return $this->json(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
         }
+
         return $this->render('user/form.html.twig', [
             'user' => $user,
             'form' => $form,

@@ -71,11 +71,14 @@ class UserType extends AbstractType
                 'empty_data' => '',
             ])
             ->add('role_asso', TextType::class, [
-                'label' => 'Role dans l\'association'
+                'label' => 'Role dans l\'association',
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,
+                'attr' => [
+                    "rows" => 4,
+                ]
             ])
             ->add('address', TextType::class, [
                 'label' => 'Adresse',
@@ -170,7 +173,7 @@ class UserType extends AbstractType
             if (!$showAboutPage) {
                 $user->setShowAboutPage(false);
             }
-            
+
             if (empty($user->getRoles())) {
                 $user->setRoles(['ROLE_USER']);
             }

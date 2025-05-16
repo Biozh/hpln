@@ -123,7 +123,7 @@ final class UserController extends AbstractController
                 $isSelf = $currentUser instanceof User && $currentUser->getEmail() === $result['email'];
                 if ($this->roleComparator->isEqualOrSuperior($currentUser, $targetUser) || $isSelf) {
                     $actions .= '<button data-url="' . $this->generateUrl('admin_user_form', ['id' => $result['id'], 'type' => 'edit']) . '" data-type="edit" class="btn btn-sm btn-primary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Modifier"><span class="material-symbols-rounded fs-6">edit</span></button>';
-                    if (!$isSelf) {
+                    if (!$isSelf && $this->roleComparator->isSuperior($currentUser, $targetUser)) {
                         $actions .= '<button data-url="' . $this->generateUrl('admin_user_delete', ['id' => $result['id']]) . '" data-type="delete" class="btn btn-sm btn-dark flex-center openForm" data-bs-toggle="tooltip" data-bs-title="Supprimer"><span class="material-symbols-rounded fs-6">delete</span></button>';
                     }
                 }
@@ -220,12 +220,11 @@ final class UserController extends AbstractController
         $form_action = $this->generateUrl('admin_user_delete', ['id' => $user->getId()]);
 
         if ($token) {
-            if ($this->isCsrfTokenValid($token_key, $token)) {
-                $entityManager->remove($user);
-                $entityManager->flush();
-            } else {
+            if (!$this->isCsrfTokenValid($token_key, $token)) {
                 return $this->json(['success' => false, 'message' => 'Le token CSRF est invalide.'], Response::HTTP_BAD_REQUEST);
             }
+            $entityManager->remove($user);
+            $entityManager->flush();
 
             return $this->json(['success' => true, 'message' => 'Utilisateur supprimé avec succès !']);
         } else {

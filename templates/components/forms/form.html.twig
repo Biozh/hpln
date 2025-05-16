@@ -1,0 +1,44 @@
+{% set form_id = form_id|default('form_' ~ random(1000, 9999)) %}
+
+<div class="modal-header">
+    {% block header %}
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <h4 class="card-title mb-0">
+                {{ form_title|default('Formulaire') }}
+            </h4>
+            <div role="button" class="text-decoration-none flex-center" type="button" data-bs-dismiss="modal" data-bs-toggle="tooltip" data-bs-title="Fermer" data-bs-placement="bottom">
+                <span class="material-symbols-rounded fs-6">close</span>
+            </div>
+        </div>
+    {% endblock %}
+</div>
+
+<div class="modal-body">
+    {% block body %}
+        {{ 
+            form_start(form, {'attr': {
+                'action': form_url, 
+                'data-url': form_url,
+                'method': 'POST', 
+                'novalidate': 'novalidate', 
+                'class': 'needs-validation ajaxForm',
+                'id': form_id,
+                'enctype': 'multipart/form-data',
+            }}) 
+        }}
+
+            {{ include(form_template, {
+                form: form,
+                submit: false,
+                init: false,
+            }) }}
+            
+        {{ form_end(form) }}
+    {% endblock %}
+</div>
+
+<div class="modal-footer">
+    {% block footer %}
+        <button class="btn btn-primary me-2" type="submit" form="{{ form_id }}">Sauvegarder</button>
+    {% endblock %}
+</div>

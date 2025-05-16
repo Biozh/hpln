@@ -24,7 +24,7 @@ export const openModalForm = (url, type = 'edit', cb = () => { }) => {
     return new Promise((resolve, reject) => {
         $.get(url)
             .done(function (form) {
-                let modal = createModal();
+                let modal = createModal(type === "delete" ? "md" : "xl");
                 $("body").append(modal);
                 modal.find('.modal-content').html(form);
 
@@ -70,6 +70,15 @@ export const openModalForm = (url, type = 'edit', cb = () => { }) => {
                 resolve(bsModal);
             })
             .fail(function (jqXHR, textStatus, errorThrown) {
+                if (cb) cb();
+
+                let message = 'Une erreur est survenue lors du chargement du formulaire.';
+
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    message = jqXHR.responseJSON.message;
+                }
+
+                showAlert('danger', message);
                 reject(new Error(`Erreur lors du chargement du formulaire : ${textStatus}`));
             });
     });
@@ -77,10 +86,10 @@ export const openModalForm = (url, type = 'edit', cb = () => { }) => {
 
 
 // Fonction pour créer un modal
-const createModal = () => {
+const createModal = (size = "xl") => {
     return $(`
         <div class="modal fade" tabindex="-1" id="${Date.now()}">
-            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-dialog modal-${size} modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content border-0 overflow-auto">
                 </div>
             </div>
@@ -128,6 +137,7 @@ export const handleAjaxForm = (form, e, url, onSuccess = () => { }, onError = ()
             error: function (xhr) {
                 enableSubmitButton(form);
                 handleAjaxError(form, xhr, onError);
+                showAlert('danger', 'Une erreur est survenue lors de la soumission du formulaire.');
             },
         });
     }

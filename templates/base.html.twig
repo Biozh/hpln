@@ -44,7 +44,7 @@
     
         {# ALERTS #}
         <div class="alert-container position-fixed w-100 top-0 start-50 translate-middle-x my-1" style="z-index: 999; pointer-events: none; bottom: 0; right: 0; max-width: 400px;">
-            <div style="pointer-events: auto;">
+            <div style="pointer-events: auto;" id="alert-container">
                 {{ include('admin/components/alerts.html.twig') }}
                 {{ include('admin/components/flashes.html.twig') }}
             </div>

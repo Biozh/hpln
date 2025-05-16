@@ -6,13 +6,38 @@ export const disableForm = (modal) => {
 };
 
 export const showAlert = (type, message, callback = () => { }) => {
-    $('#alert-' + type).find(".alert-content").html(message)
-    $('#alert-' + type).find(".close").on('click', function () {
-        $('#alert-' + type).fadeOut(500, callback)
-    })
-    $('#alert-' + type).fadeIn(500, () => {
-        setTimeout(() => {
-            $('#alert-' + type).fadeOut(500, callback)
-        }, 8000)
-    })
-}
+    const baseAlert = $('#alert-' + type);
+    if (!baseAlert.length) return;
+
+    const uniqueId = 'alert-' + type + '-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+    const alert = baseAlert.clone();
+
+    alert
+        .attr('id', uniqueId)
+        .fadeIn(500)
+        .find('.alert-content').html(message);
+
+    // Gérer la fermeture manuelle
+    alert.find('.close').on('click', () => {
+        alert.fadeOut(300, () => {
+            alert.remove();
+            callback();
+        });
+    });
+
+    // Fermeture automatique après 8s
+    setTimeout(() => {
+        alert.fadeOut(300, () => {
+            alert.remove();
+            callback();
+        });
+    }, 8000);
+
+    // Injecter dans un conteneur dédié (si présent), sinon dans le body
+    const container = $('#alert-container');
+    if (container.length) {
+        container.append(alert);
+    } else {
+        $('body').append(alert);
+    }
+};

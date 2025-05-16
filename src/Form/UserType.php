@@ -44,7 +44,7 @@ class UserType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
-                'required' => isset($options['data']) && $options['data']->getId() ? false : true,
+                'required' => false,
                 'mapped' => false,
                 'first_options' => [
                     'label' => 'Mot de passe',
@@ -128,7 +128,10 @@ class UserType extends AbstractType
                 'choices' => $roleChoices,
                 'multiple' => true,
                 'expanded' => false,
-                'attr' => ['class' => 'select2'],
+                'attr' => [
+                    'class' => 'select2',
+                    'data-tags' => 'false',
+                ],
                 'data' => $options['data']->getRoles() ?? [],
                 'constraints' => [
                     new Assert\NotNull(['message' => 'Les rôles ne peuvent pas être nuls.']),

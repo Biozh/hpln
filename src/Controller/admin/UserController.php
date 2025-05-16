@@ -126,8 +126,10 @@ final class UserController extends AbstractController
 
                 $isSelf = $currentUser instanceof User && $currentUser->getEmail() === $result['email'];
                 if ($this->roleComparator->isEqualOrSuperior($currentUser, $targetUser) || $isSelf) {
-                    $actions .= '<button data-url="' . $this->generateUrl('admin_user_form', ['id' => $result['id']]) . '" data-type="edit" class="btn btn-sm btn-primary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Modifier"><span class="material-symbols-rounded fs-6">edit</span></button>';
-                    $actions .= '<button data-url="' . $this->generateUrl('admin_user_delete', ['id' => $result['id']]) . '" data-type="delete" class="btn btn-sm btn-dark flex-center openForm" data-bs-toggle="tooltip" data-bs-title="Supprimer"><span class="material-symbols-rounded fs-6">delete</span></button>';
+                    $actions .= '<button data-url="' . $this->generateUrl('admin_user_form', ['id' => $result['id'], 'type' => 'edit']) . '" data-type="edit" class="btn btn-sm btn-primary flex-center openForm me-2" data-bs-toggle="tooltip" data-bs-title="Modifier"><span class="material-symbols-rounded fs-6">edit</span></button>';
+                    if (!$isSelf && $this->roleComparator->isSuperior($currentUser, $targetUser)) {
+                        $actions .= '<button data-url="' . $this->generateUrl('admin_user_delete', ['id' => $result['id']]) . '" data-type="delete" class="btn btn-sm btn-dark flex-center openForm" data-bs-toggle="tooltip" data-bs-title="Supprimer"><span class="material-symbols-rounded fs-6">delete</span></button>';
+                    }
                 }
 
                 $actions .= '</div>';
@@ -209,19 +211,25 @@ final class UserController extends AbstractController
             throw $this->createAccessDeniedException("Vous n'avez pas l'autorisation de supprimer cet utilisateur.");
         }
 
-        $token = $request->getPayload()->getString('_token');
+        $token = $request->request->get('_token');
+        $token_key = "delete" . $user->getId();
+
+        $form_title = "Suppression de " . $user->getFirstname() . " " . $user->getLastname();
+        $form_action = $this->generateUrl('admin_user_delete', ['id' => $user->getId()]);
 
         if ($token) {
-            if ($this->isCsrfTokenValid('delete' . $user->getId(), $token)) {
-                $entityManager->remove($user);
-                $entityManager->flush();
+            if (!$this->isCsrfTokenValid($token_key, $token)) {
+                return $this->json(['success' => false, 'message' => 'Le token CSRF est invalide.'], Response::HTTP_BAD_REQUEST);
             }
+            $entityManager->remove($user);
+            $entityManager->flush();
 
             return $this->json(['success' => true, 'message' => 'Utilisateur supprimé avec succès !']);
         } else {
-            return $this->render('user/_delete_form.html.twig', [
-                'user' => $user,
-                'message' => 'Êtes-vous sûr(e) de vouloir supprimer cet utilisateur ?',
+            return $this->render('components/forms/delete_form.html.twig', [
+                "form_title" => $form_title,
+                "form_action" => $form_action,
+                "form_token" => $token_key,
             ]);
         }
     }
